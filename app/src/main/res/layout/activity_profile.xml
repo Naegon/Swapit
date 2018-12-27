@@ -1,0 +1,184 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileActivity">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:orientation="vertical"
+            android:outlineSpotShadowColor="@color/colorPrimary"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:contentDescription="@string/nav_header_desc"
+                    android:paddingTop="@dimen/nav_header_vertical_spacing"
+                    app:srcCompat="@mipmap/ic_profil_user"
+                    tools:srcCompat="@mipmap/ic_profil_user" />
+
+                <LinearLayout
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:layout_weight="1.0"
+                    android:orientation="vertical">
+
+                    <TextView
+                        android:id="@+id/textView_profil_nom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Dupond"
+                        android:textSize="24sp" />
+
+                    <TextView
+                        android:id="@+id/textView_profil_prenom"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Kévin"
+                        android:textSize="24sp" />
+
+                </LinearLayout>
+
+                <android.support.v7.widget.CardView xmlns:card_view="http://schemas.android.com/apk/res-auto"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    card_view:cardBackgroundColor="@color/white"
+                    card_view:cardCornerRadius="10dp"
+                    card_view:cardElevation="5dp"
+                    card_view:cardUseCompatPadding="true">
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:orientation="vertical">
+
+                        <TextView
+                            android:id="@+id/textView_profil_swap"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="42"
+                            android:textColor="@color/colorPrimary"
+                            android:textSize="42sp" />
+
+                        <TextView
+                            android:id="@+id/textViewSwaps"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_horizontal"
+                            android:text="Swaps" />
+                    </LinearLayout>
+
+                </android.support.v7.widget.CardView>
+
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider2"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/divider_custom_style"/>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_mail20" />
+
+                <TextView
+                    android:id="@+id/textView_profil_mail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="kevin.dupont@efrei.net"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="32dp"
+                    android:layout_height="32dp"
+                    android:layout_marginEnd="16dp"
+                    app:srcCompat="@drawable/ic_smartphone_call" />
+
+                <TextView
+                    android:id="@+id/textView_profil_telephone"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="06 42 42 42 42"
+                    android:textSize="24sp" />
+            </LinearLayout>
+
+            <View
+                android:id="@+id/divider3"
+                android:layout_width="match_parent"
+                android:layout_height="2dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:background="@drawable/divider_custom_style" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_gravity="center_horizontal">
+
+                <TextView
+                    android:id="@+id/textView_profil_description"
+                    android:layout_width="0dp"
+                    android:layout_weight="1.0"
+                    android:layout_height="wrap_content"
+                    android:text="Description :"
+                    android:textSize="24sp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:text="Edit"
+                    android:gravity="end"/>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/textView_profil_description_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Apprenez donc de moi pour entrer dans le fleuve. Lecture décidément bien faite pour inspirer des appréhensions au plus courageux. Tirer sur le peuple qui était avec moi au salut de la maison jetait à chaque instant d'horizon. Assise près de son corps et l'âme pour ne pas mépriser celui qu'elle croyait n'être plus sous les regards du profane, des plans successifs où les choses étaient de deux francs, et ses entretiens avec sa fille ? Élu par le peuple, obéissant à la souveraineté ? Continuellement, elle en a, doivent tomber asphyxiés d'ennui de leurs pages didactiques, mais il n'osa lui parler, je m'appellerais un jardinier. Sauriez-vous jouer de la clarinette ? Tête de cocu, cet homme ne donnait-il aucun signe de reconnaissance nous fîmes des révérences à la maîtresse de ton coeur, bien persuadé en cet instant capital. " />
+
+        </LinearLayout>
+    </ScrollView>
+
+</android.support.constraint.ConstraintLayout>

@@ -1,0 +1,594 @@
+<resources>
+    <string name="app_name">Swap it!</string>
+    <string name="navigation_drawer_open">Open navigation drawer</string>
+    <string name="navigation_drawer_close">Close navigation drawer</string>
+    <string name="nav_header_title">Swap it</string>
+    <string name="nav_header_subtitle">Efrei Project</string>
+    <string name="nav_header_desc">Navigation header</string>
+    <string name="action_settings">Parametres</string>
+    <string name="title_activity_login">Connexion</string>
+    <string name="suppression_compte_texte">Voulez-vous vraiment supprimer votre compte ? \nToutes vos données seront effacées et vous perdrez vos swaps.</string>
+    <string name="success">Succès !</string>
+    <string name="annonce_check">Ton annonce est en ligne</string>
+
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="permission_rationale">"Contacts permissions are needed for providing email completions."</string>
+
+    <!-- Strings related to Profile -->
+    <!-- Profile -->
+    <string name="page_profile_name">Profil utilisateur</string>
+    <!-- TODO: Mettre a jour page de profil -->
+    <!-- Edit profile -->
+    <string name="page_edit_profile_name">Editer informations utilisateur</string>
+    <string name="user_name">Prénom</string>
+    <string name="user_surname">Nom</string>
+    <string name="user_mail">E-mail Efrei</string>
+    <string name="user_phone">Numéro de téléphone</string>
+    <string name="user_password">Mot de passe</string>
+    <string name="user_confirm_password"> Confirmation mot de passe</string>
+    <string name="user_resum">Rapide description"</string>
+    <string name="validate_edit">Valider</string>
+
+    <string name="promo_prompt">Promotion</string>
+    <string-array name="promo_arrays">
+        <item>Selectionner votre annnée</item>
+        <item>L1</item>
+        <item>L2</item>
+        <item>L3</item>
+        <item>M1</item>
+        <item>M2</item>
+    </string-array>
+
+    <string-array name="add_arrays">
+        <item>Selectionner votre situation</item>
+        <item>ø</item>
+        <item>Prime</item>
+        <item>New</item>
+    </string-array>
+
+    <string-array name="section_arrays">
+        <item>Selectionner votre section</item>
+        <item>Classique</item>
+        <item>Internationale</item>
+        <item>Bio numérique</item>
+    </string-array>
+
+    <!-- Strings related to Settings -->
+    <string name="page_settings_name">Paramètres</string>
+    <string name="modification_profil">Modifier le profil</string>
+    <string name="historique">Historique</string>
+    <string name="notification">Notifications</string>
+    <string name="modification_password">Modifier le mot de passe</string>
+    <string name="supprimer_compte">Supprimer le compte</string>
+    <!-- Strings related to Notification -->
+    <string name="page_notification_name">Notification</string>
+    <string name="activate_all_notification">Activer toutes les notifications</string>
+    <string name="activate_soutien_notification">Soutien</string>
+    <string name="activate_service_notification">Services</string>
+
+    <!-- Strings pour modification du mot de passe -->
+    <string name="saisie_ancien">Saisissez le mot de passe actuel</string>
+    <string name="saisie_nouveau">Saisissez le nouveau mot de passe</string>
+    <string name="saisie_confirmation">Confirmer votre nouveau mot de passe</string>
+
+    <!-- Strings related to menu des annonces-->
+    <string name="menu_service">Service</string>
+    <string name="menu_soutien">Soutien</string>
+
+    <!-- Strings related to creation d'une annonce de soutien-->
+    <!-- Button et textview-->
+    <string name="date">Date</string>
+    <string name="hour">Heure</string>
+    <string name="nombre_swap">Nombre de swap</string>
+    <string name="description_annonce">Description de l\'annonce</string>
+    <string name="master">Master</string>
+    <string name="licence">Licence</string>
+    <!-- Spinner-->
+    <string-array name="choose_item">
+        <item>Selectionner un semestre et une UE</item>
+    </string-array>
+    <string-array name="choose_cycle">
+        <item>Selectionner votre cycle</item>
+    </string-array>
+    <string-array name="semestre_array">
+        <item>Selectionner un semestre</item>
+        <item>S1</item>
+        <item>S2</item>
+        <item>S3</item>
+        <item>S4</item>
+        <item>S5</item>
+        <item>S6</item>
+        <item>S7</item>
+        <item>S8</item>
+        <item>S9</item>
+        <item>S10</item>
+    </string-array>
+
+    <string-array name="semestre_licence_array">
+        <item>Sélectionner un semestre</item>
+        <item>S1</item>
+        <item>S2</item>
+        <item>S3</item>
+        <item>S4</item>
+        <item>S5</item>
+        <item>S6</item>
+    </string-array>
+    <string-array name="semestre_master_array">
+        <item>Sélectionner un semestre</item>
+        <item>S7</item>
+        <item>S8</item>
+        <item>S9</item>
+    </string-array>
+
+    <string-array name="majeure_array">
+        <item>Sélectionner une majeure</item>
+        <item>Avionique</item>
+        <item>Cybersécurité</item>
+        <item>Développement logiciel</item>
+        <item>Finance de marché</item>
+        <item>IT pour entreprise</item>
+        <item>Réalité virtuelle</item>
+        <item>Sciences des données et intelligence artificielle</item>
+        <item>Systèmes intelligents et robotiques</item>
+        <item>Systèmes réseaux et bases de données</item>
+    </string-array>
+
+    <string-array name="no_matiere">
+        <item>Pas de matiere pour l\'UE sélectionnée</item>
+    </string-array>
+
+    <string-array name="ue_array">
+        <item>Selectionner une UE</item>
+        <item>Formation Generale</item>
+        <item>Informatique</item>
+        <item>Mathematiques</item>
+        <item>Physique</item>
+    </string-array>
+
+
+    <string-array name="matiere_S1_formation_generale">
+        <item>Anglais</item>
+        <item>Communication</item>
+    </string-array>
+    <string-array name="matiere_S1_informatique">
+        <item>Algorithmie</item>
+        <item>Programmation</item>
+    </string-array>
+    <string-array name="matiere_S1_mathematiques">
+        <item>Nombres et Structures</item>
+        <item>Fonctions et Variations</item>
+    </string-array>
+    <string-array name="matiere_S1_physique">
+        <item>Atome à la puce</item>
+        <item>Electricité générale</item>
+        <item>Information numérique</item>
+    </string-array>
+
+    <string-array name="matiere_S2_formation_generale">
+        <item>Anglais</item>
+        <item>Communication</item>
+        <item>Economie</item>
+    </string-array>
+    <string-array name="matiere_S2_informatique">
+        <item>Algorithmie</item>
+        <item>Programmation</item>
+    </string-array>
+    <string-array name="matiere_S2_mathematiques">
+        <item>Algèbre linéaire</item>
+        <item>Sommes finies et infinies</item>
+    </string-array>
+    <string-array name="matiere_S2_physique">
+        <item>Du système à la fonction</item>
+        <item>la voix et image</item>
+        <item>Mécanique</item>
+    </string-array>
+
+    <string-array name="matiere_S3_formation_generale">
+        <item>Anglais</item>
+        <item>Communication</item>
+        <item>Economie</item>
+        <item>Histoire des Sciences</item>
+    </string-array>
+    <string-array name="matiere_S3_informatique">
+        <item>Algorithmie</item>
+        <item>Programmation</item>
+    </string-array>
+    <string-array name="matiere_S3_mathematiques">
+        <item>Mathématiques du réel</item>
+        <item>Probabilités et Statistiques</item>
+    </string-array>
+    <string-array name="matiere_S3_physique">
+        <item>Physique quantique</item>
+        <item>Systeme de transmission</item>
+        <item>Champs éléctromagnetique</item>
+    </string-array>
+
+    <string-array name="matiere_S4_formation_generale">
+        <item>Anglais</item>
+        <item>Communication</item>
+        <item>Organisation et processus</item>
+    </string-array>
+    <string-array name="matiere_S4_informatique">
+        <item>Algorithmie</item>
+        <item>Programmation</item>
+    </string-array>
+    <string-array name="matiere_S4_mathematiques">
+        <item>Analyse de données</item>
+        <item>Mathématiques pour informatique</item>
+        <item>Probabilités et Statistiques</item>
+    </string-array>
+    <string-array name="matiere_S4_physique">
+        <item>Systèmes numériques</item>
+        <item>Thermodynamique</item>
+        <item>Propagation électromagnétique</item>
+    </string-array>
+
+    <string-array name="matiere_S5_formation_generale">
+        <item>Probability and Performance</item>
+        <item>English for Technologists</item>
+    </string-array>
+    <string-array name="matiere_S5_informatique">
+        <item>Java 1</item>
+        <item>Web Programming</item>
+        <item>Databases</item>
+        <item>Networks and Protocols</item>
+        <item>Operating Systems</item>
+    </string-array>
+
+    <string-array name="matiere_S6_formation_generale">
+        <item>Anglais</item>
+        <item>Communication</item>
+        <item>Droit des scoiétés et des contrats</item>
+        <item>Analyse financière</item>
+    </string-array>
+    <string-array name="matiere_S6_informatique">
+        <item>Java 2</item>
+        <item>Base de données 2</item>
+        <item>Architecture des ordinateurs</item>
+        <item>Introduction à la cybersécurité</item>
+    </string-array>
+    <string-array name="matiere_S6_mathematiques">
+        <item>Optimisation</item>
+        <item>Théorie des groupes</item>
+        <item>Théorie des graphes</item>
+    </string-array>
+    <string-array name="matiere_S6_physique">
+        <item>VHDL</item>
+        <item>Logique programmable</item>
+        <item>Systèmes linéaires</item>
+        <item>Théorie du signal 1</item>
+        <item>Théorie du signal 2</item>
+        <item>Canaux de transmission</item>
+    </string-array>
+
+    <string-array name="matiere_S7_avionique">
+        <item>Labview</item>
+        <item>Avions du futur</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_cybersécuité">
+        <item>Computer Security</item>
+        <item>Introduction à la Cyber Sécurité</item>
+        <item>Ethical Hacking</item>
+        <item>Cryptography and Network Security</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_développement_logiciel">
+        <item>Java Enterprise Edition</item>
+        <item>DevOps and Continuous Delivery</item>
+        <item>C#</item>
+        <item>Application Interoperability with Web Services</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_finance_de_marché">
+        <item>Pricing of Derivatives: Models and Algorithms I</item>
+        <item>Introduction to Financial Market</item>
+        <item>Econometrics for Finance</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_IT_pour_entreprise">
+        <item>Operational Decision Making Systems</item>
+        <item>Web services</item>
+        <item>Information System Technologies</item>
+        <item>Information System Modeling</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_réalité_virtuelle">
+        <item>Mathématiques pour la Géométrie</item>
+        <item>Introduction au Traitement images</item>
+        <item>Introduction à la réalité virtuelle</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_sciences_des_données_et_intelligence_artificielle">
+        <item>Machine Learning</item>
+        <item>Hadoop stack - Hive </item>
+        <item>Data structuring and NoSQL databases</item>
+        <item>Distributed Algorithms</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_systèmes_intelligents_et_robotiques">
+        <item>Vision robotique</item>
+        <item>Systèmes temps-réel</item>
+        <item>Commande et asservissement</item>
+        <item>Digital Signal Processing and Processor</item>
+        <item>Capteurs et mécanique du vol</item>
+        <item>Architectures matérielles</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+    <string-array name="matiere_S7_systèmes_réseaux_et_bases_de_données">
+        <item>Switched and Routed Networks</item>
+        <item>System and Network Programming</item>
+        <item>Scripting and Monitoring</item>
+        <item>Services Réseau</item>
+        <item>Virtualization, Cloud Computing and Storage</item>
+        <item>Advanced Databases</item>
+        <item>Advanced Operating Systems</item>
+        <item>Access, Core and Mobile Networks</item>
+        <item>Anglais</item>
+        <item>IT Law and Ethics</item>
+        <item>Droit des NTIC et éthique</item>
+    </string-array>
+
+    <string-array name="matiere_S8_avionique">
+        <item>Tableau de bord virtuel et techniques d_accès</item>
+        <item>Protection des données et des matériels</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_cybersécuité">
+        <item>Sécurité des réseaux sans fil</item>
+        <item>Network security</item>
+        <item>Ethical Hacking II</item>
+        <item>Big Data, Networks and Security</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_développement_logiciel">
+        <item>Real-Time Systems</item>
+        <item>Mobile Development</item>
+        <item>Front-end web development </item>
+        <item>Functional Data Programming</item>
+        <item>Applications of Big Data for IoT</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_financement_de_marché">
+        <item>vide</item>
+    </string-array>
+    <string-array name="matiere_S8_IT_pour_entreprise">
+        <item>Internet of Things</item>
+        <item>Collaborative tools</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_réalité_virtuelle">
+        <item>Réalité virtuelle et interaction homme-machine</item>
+        <item>Traitement images avancé</item>
+        <item>Reconnaissance des formes</item>
+        <item>Graphique 3D</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_sciences_des_données_et_intelligence_artificielle">
+        <item>Advanced Machine Learning and Text Mining</item>
+        <item>Knowledge Management and Semantic Web</item>
+        <item>Introduction to Business Intelligence</item>
+        <item>Introduction to Big Dat</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_systèmes_intelligents_et_robotiques">
+        <item>Systèmes critiques et leur modélisation</item>
+        <item>Vision et communications numériques</item>
+        <item>Robotique</item>
+        <item>Commande et énergie</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S8_systèmes_réseaux_et_bases_de_données">
+        <item>Windows Administration</item>
+        <item>Virtualisation Foundations and Applications</item>
+        <item>Quality of Service, VoIP and Modern Networking</item>
+        <item>Linux Administration</item>
+        <item>Enterprise Resource Planning</item>
+        <item>Advanced Databases</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Pricing of Derivatives: Models and Algorithms II</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Mathematics and Applied Cryptography</item>
+        <item>Financial Risk</item>
+        <item>Convex Optimisation</item>
+    </string-array>
+    <string-array name="matiere_S9_avionique">
+        <item>Vide</item>
+    </string-array>
+    <string-array name="matiere_S9_cybersécurité" >
+        <item>Security Seminar</item>
+        <item>Tests d’instruction</item>
+        <item>Forensics Investigation</item>
+        <item>Défenses avancées</item>
+        <item>Cloud Security and White Hacking</item>
+        <item>Analyse, vulnérabilité du logiciel</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+    <string-array name="matiere_S9_Développement_Logiciel">
+        <item>Testing</item>
+        <item>Software reliability and quality</item>
+        <item>Software Engineering for the Cloud</item>
+        <item>Event-driven Asynchronous Programming</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+    <string-array name="matiere_S9_Finance_de_Marché">
+        <item>Trading</item>
+        <item>Digital Finance</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+    <string-array name="matiere_S9_IT_Pour_l_entreprise">
+        <item>Information System Security</item>
+        <item>Architecture and IS Governance</item>
+        <item>Form Distributed Computing to Cloud Computing</item>
+        <item>Cloud Computing : SaaS, PaaS et LaaS</item>
+        <item>Business Process Management</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+
+    <string-array name="matiere_S9_Image_et_réalité_virtuelle">
+        <item>Vision Artificielle et Analysse de scène</item>
+        <item>Réalité augmentée et recalage 3D</item>
+        <item>Réalité virtuelle e tintéraction homme-machine</item>
+        <item>Applications de la réalité virtuelle et de la réalité augmentée</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+
+    <string-array name="matiere_S9_Systèmes_intelligents_et_robotique">
+        <item>Reconnaissancec vision et parole</item>
+        <item>Systèmes RF et sécurité des transmissions</item>
+        <item>Navigation autonome et commande de flottes</item>
+        <item>Architecture RF et CEM</item>
+        <item>IA et ROS</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+    <string-array name="matiere_S9_sciences_des_données_et_intelligence_artificielle">
+        <item>Vide</item>
+    </string-array>
+    <string-array name="matiere_S9_Systèmes_réseaux_et_bases_de_données">
+        <item>Virtualization Automation and Scripting</item>
+        <item>Distributed Systems</item>
+        <item>PaaS and IaaS : Performance and diagnostics</item>
+        <item>Infrastructure as a Service (IaaS) </item>
+        <item>Docker, SDN, Orchestration</item>
+        <item>Anglais</item>
+        <item>Français</item>
+        <item>Sociologie</item>
+        <item>Numerical Analysis Applied to Finance</item>
+        <item>Quantitative Risk Analysis</item>
+        <item>Numerical Optimization Methods</item>
+    </string-array>
+
+    <!-- Strings related to creation annonce service-->
+    <string-array name="categorie_service">
+        <item>Selectionner une catégorie</item>
+        <item>Pret de matériel</item>
+        <item>Services</item>
+    </string-array>
+    <string-array name="sous_categorie_service_pret_de_materiel">
+        <item>Selectionner une sous-catégorie</item>
+        <item>Jardinage</item>
+        <item>informatique</item>
+        <item>Bricolage</item>
+        <item>Scolaire</item>
+        <item>Association</item>
+        <item>Ménage</item>
+        <item>Autre</item>
+    </string-array>
+
+    <string-array name="sous_categorie_services">
+        <item>Selectionner une sous-catégorie</item>
+        <item>Travaux et entretien habitat</item>
+        <item>Bricolage</item>
+        <item>Déménagement</item>
+        <item>Baby-sitting</item>
+        <item>Animaux</item>
+        <item>Aides ménagères</item>
+        <item>Coaching</item>
+        <item>Courses</item>
+        <item>Dépannage informatique</item>
+        <item>Associatifs</item>
+        <item>Autres</item>
+    </string-array>
+
+    <string-array name="choose_categorie_service">
+        <item>Selectionner une catégorie de service</item>
+    </string-array>
+
+</resources>

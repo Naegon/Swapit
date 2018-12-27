@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:showIn="navigation_view">
+
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nav_profile"
+            android:icon="@drawable/ic_menu_profil"
+            android:title="Profil" />
+        <item
+            android:id="@+id/nav_settings"
+            android:icon="@drawable/ic_menu_settings"
+            android:title="Paramètres" />
+        <item
+            android:id="@+id/nav_deco"
+            android:icon="@drawable/ic_menu_deco"
+            android:title="Déconnexion" />
+    </group>
+
+    <item android:title="Informations">
+        <menu>
+            <item
+                android:id="@+id/nav_concerning"
+                android:icon="@android:drawable/ic_menu_info_details"
+                android:title="A propos" />
+            <item
+                android:id="@+id/nav_contact"
+                android:icon="@android:drawable/ic_dialog_email"
+                android:title="Nous contacter" />
+        </menu>
+    </item>
+    <group />
+
+</menu>
