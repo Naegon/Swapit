@@ -70,6 +70,7 @@ public class CallBdd {
 
     /**
      * Envoie de la requete HTTP avec urlPhp
+     * Chaine de retour stocké dans Json
      */
     public void volleyRequeteHttp(Context context){
         RequestQueue queue = Volley.newRequestQueue(context);
