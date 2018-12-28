@@ -45,6 +45,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        //Instanciation des variables
         button_connexion = findViewById(R.id.button_connexion);
         button_creer_compte = findViewById(R.id.button_creer_compte);
         editText_email = findViewById(R.id.edittext_login_email);
@@ -53,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
         final SharedPreferences pref_user = getSharedPreferences(IDENTITE_USER, MODE_PRIVATE);
         SharedPreferences.Editor pref_user_editor = getSharedPreferences(IDENTITE_USER,MODE_PRIVATE).edit();
 
+        //Gestion option garder en mémoire mail/mdp
         if (pref_user.getString("keep", "null").equals("true")){
             editText_mdp.setText(pref_user.getString("mdp", "null"));
             editText_email.setText(pref_user.getString("mail", "null"));
@@ -64,6 +67,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
+        //Gestion bouton création du compte
         button_creer_compte.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -71,6 +75,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        //Gestion bouton login
         button_connexion.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -78,7 +83,6 @@ public class LoginActivity extends AppCompatActivity {
                     CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
                     argumentPHP(loginHttp);
                     loginHttp.volleyRequeteHttp(getApplicationContext());
-
                     if (loginHttp.Json.equals("false")){
                         loginHttp.reset();
                         badMdp();
@@ -87,27 +91,27 @@ public class LoginActivity extends AppCompatActivity {
                         json(loginHttp.getJson());
                         lancerPage(0);
                     }
-                    /*
-                    url = urlPHP();
-                    new MakeNetworkCall().execute(url, "GET");
-                    */
                 }
             }
         });
-
     }
 
 
-
+    /**
+     * Quitte l'appli sur retour en arrière
+     */
     @Override
     public void onBackPressed() {
-        //TODO ca plante
         moveTaskToBack(true);
         android.os.Process.killProcess(android.os.Process.myPid());
         System.exit(1);
         super.onBackPressed();
     }
 
+    /**
+     * Lance page principale ou creation compte
+     * @param num 0 = main page 1 = creation profil
+     */
     public void lancerPage(int num){
         //0 pour main 1 pour compte
         Intent intent_main = new Intent(this, MainActivity.class);
@@ -120,6 +124,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * @return true = champs mail non vide, false = champs mail vide
+     */
     public boolean validiteEmail(){
         boolean ok = true;
         editText_email.setError(null);
@@ -131,6 +138,9 @@ public class LoginActivity extends AppCompatActivity {
         return ok;
     }
 
+    /**
+     * @return true = champs mdp non vide, false = champs mdp vide
+     */
     public boolean validiteMdp(){
         boolean ok = true;
         editText_mdp.setError(null);
@@ -142,8 +152,9 @@ public class LoginActivity extends AppCompatActivity {
         return ok;
     }
 
-
-
+    /**
+     * Saisie valide
+     */
     public boolean validiteSaisie(){
         boolean ok = true;
         if (!validiteEmail()){
@@ -155,197 +166,18 @@ public class LoginActivity extends AppCompatActivity {
         return ok;
     }
 
-    /*
-    public String argumentPHP(){
-        String mdp = editText_mdp.getText().toString();
-        String mail = editText_email.getText().toString();
-        String param = "adresse_mail=" + mail + "&"
-                + "mdp=" + mdp;
-        return param;
-    }*/
-
+    /**
+     * Ajout des arguments (couple clé/valeur) à la liste
+     */
     public void argumentPHP(CallBdd loginHttp){
         loginHttp.ajoutArgumentPhpList("adresse_mail", editText_email.getText().toString());
         loginHttp.ajoutArgumentPhpList("mdp", editText_mdp.getText().toString());
     }
 
-    /*
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        url = "http://91.121.116.121/swapit/login.php?" + param;
-        Log.d(LOG_TAG, "Error : " + url);
-        return url;
-    }*/
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-        //json(response.toString());
-        //getJsonRetour(response.toString());
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO ICI affichage test
-
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //TODO afficher le please wait dans un popup
-            DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-            //res = json(res);
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            if (result.equals("false")){
-                badMdp();
-            }
-            else{
-                json(result);
-                lancerPage(0);
-            }
-            Log.d(LOG_TAG, "Result: " + result);
-        }
-    }
-
-
+    /**
+     * Json to string
+     * Garde infos utilisateur dans le shared preference
+     */
     public void json(String a){
         try {
             JSONObject json = new JSONObject(a);
@@ -373,6 +205,9 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Reset tous les champs
+     */
     public void badMdp(){
         editText_mdp.setError("Email/Mot de passe erroné");
         editText_email.setError("Email/Mot de passe erroné");
