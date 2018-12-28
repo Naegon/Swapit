@@ -11,6 +11,7 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class CallBdd {
     private static String LOG_TAG = "CallBdd";
@@ -57,27 +58,45 @@ public class CallBdd {
         Json = "";
         url = pUrl;
         urlPhp = pUrl;
-        Log.d(LOG_TAG, "Json " + Json);
+        parametrePhp = new ArrayList<String>();
     }
 
     /**
      * Ajout des parametres PHP (couple clé/valeur) à la liste
      */
-    public void ajoutArgumentPhp(String cle, String valeur){
+    public void ajoutArgumentPhpList(String cle, String valeur){
         parametrePhp.add(cle);
         parametrePhp.add(valeur);
+        Log.d(LOG_TAG, "Liste param " + parametrePhp.toString());
+    }
+
+    private void ajoutArgumentPhpUrl(ArrayList<String> param){
+        for (int i = 0 ; i < param.size() ; i++){
+            if ((i % 2) == 0){
+                urlPhp += param.get(i) + "=";
+            }
+            else{
+                urlPhp += param.get(i);
+                if (i != (param.size()-1)){
+                    urlPhp += "&";
+                }
+            }
+            Log.d(LOG_TAG, "URL PHP " + urlPhp);
+        }
     }
 
     /**
+     * Ajout des parametres à l'url
      * Envoie de la requete HTTP avec urlPhp
      * Chaine de retour stocké dans Json
      */
     public void volleyRequeteHttp(Context context){
+        ajoutArgumentPhpUrl(parametrePhp);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlPhp, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(LOG_TAG, "resp" + response);
+                Log.d(LOG_TAG, "Retour BDD" + response);
                 setJson(response);
             }
         }, new Response.ErrorListener() {
@@ -87,5 +106,12 @@ public class CallBdd {
             }
         });
         queue.add(stringRequest);
+    }
+
+    public void reset(){
+        Json = "";
+        url = "";
+        urlPhp = "";
+        parametrePhp = null;
     }
 }

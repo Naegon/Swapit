@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 
+import com.swapit.swap_it.CallBdd;
 
 // Page pour se connecter à son compte
 public class LoginActivity extends AppCompatActivity {
@@ -74,13 +75,29 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validiteSaisie()){
+                    CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
+                    argumentPHP(loginHttp);
+                    loginHttp.volleyRequeteHttp(getApplicationContext());
+
+                    if (loginHttp.Json.equals("false")){
+                        loginHttp.reset();
+                        badMdp();
+                    }
+                    else{
+                        json(loginHttp.getJson());
+                        lancerPage(0);
+                    }
+                    /*
                     url = urlPHP();
                     new MakeNetworkCall().execute(url, "GET");
+                    */
                 }
             }
         });
 
     }
+
+
 
     @Override
     public void onBackPressed() {
@@ -138,14 +155,21 @@ public class LoginActivity extends AppCompatActivity {
         return ok;
     }
 
+    /*
     public String argumentPHP(){
         String mdp = editText_mdp.getText().toString();
         String mail = editText_email.getText().toString();
         String param = "adresse_mail=" + mail + "&"
                 + "mdp=" + mdp;
         return param;
+    }*/
+
+    public void argumentPHP(CallBdd loginHttp){
+        loginHttp.ajoutArgumentPhpList("adresse_mail", editText_email.getText().toString());
+        loginHttp.ajoutArgumentPhpList("mdp", editText_mdp.getText().toString());
     }
 
+    /*
     public String urlPHP(){
         String url;
         String param = argumentPHP();
@@ -153,7 +177,7 @@ public class LoginActivity extends AppCompatActivity {
         url = "http://91.121.116.121/swapit/login.php?" + param;
         Log.d(LOG_TAG, "Error : " + url);
         return url;
-    }
+    }*/
 
     InputStream ByGetMethod(String ServerURL) {
 
@@ -315,7 +339,6 @@ public class LoginActivity extends AppCompatActivity {
             }
             else{
                 json(result);
-
                 lancerPage(0);
             }
             Log.d(LOG_TAG, "Result: " + result);
