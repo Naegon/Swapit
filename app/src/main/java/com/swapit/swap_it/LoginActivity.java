@@ -37,7 +37,6 @@ public class LoginActivity extends AppCompatActivity {
     String url;
     TextView test;
     CheckBox checkBox_rester_co;
-
     private static String LOG_TAG = "LogActvity";
     public static final String IDENTITE_USER = "IdentiteUser";
 
