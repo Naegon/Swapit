@@ -46,7 +46,7 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
     Spinner spinner_semestre, spinner_matiere, spinner_ue;
     RadioButton radiobutton_license, radiobutton_master;
     RadioGroup radiogroup_cycle;
-    private static String LOG_TAG = "MainActivity";
+    private static String LOG_TAG = "CreationAnnonceSoutienActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
 
     @Override

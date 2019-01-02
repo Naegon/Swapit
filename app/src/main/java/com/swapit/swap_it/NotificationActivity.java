@@ -15,6 +15,7 @@ import java.net.URL;
 // Sous-page des paramètres concernant les préférences de notification
 public class NotificationActivity extends AppCompatActivity {
 
+    private static String LOG_TAG = "NotificationActivity";
     public Switch mNotificationAll;
     public Switch mNotificationService;
     public Switch mNotificationSoutien;

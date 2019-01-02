@@ -26,7 +26,7 @@ import java.net.URL;
 
 // Page des paramètres
 public class SettingsActivity extends AppCompatActivity {
-    private static String LOG_TAG = "Test";
+    private static String LOG_TAG = "SettingActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
     Context context;
 

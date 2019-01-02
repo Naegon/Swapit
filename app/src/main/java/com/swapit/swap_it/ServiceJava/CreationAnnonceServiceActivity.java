@@ -38,8 +38,8 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
     int mYear, mMonth, mDay;
     Spinner spinner_categorie, spinner_sous_categorie;
     public static final String IDENTITE_USER = "IdentiteUser";
+    private static String LOG_TAG = "CreationAnnonceServiceActivity";
 
-    private static String LOG_TAG = "MainActivity";
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);

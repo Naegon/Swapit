@@ -29,7 +29,7 @@ public class CreationCompteActivity extends AppCompatActivity {
     Button valider;
     EditText email, telephone, nom, prenom, bio, mdp, confirmer_mdp;
     Spinner spinner_section, spinner_promo, spinner_add;
-    private static String LOG_TAG = "DEBUG_V";
+    private static String LOG_TAG = "CreationCompteActivity";
     String retour_bdd;
     public static final String ISCREATION = "iscreation";
 

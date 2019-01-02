@@ -26,7 +26,7 @@ public class ModificationPasswordActivity extends AppCompatActivity {
     private EditText mAncienPassword;
     private Button mValide;
     private String test_password = "bonjour";
-    private static String LOG_TAG = "MainActivity";
+    private static String LOG_TAG = "ModificationPasswordActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
     String retour_bdd;
 

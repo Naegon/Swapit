@@ -96,7 +96,6 @@ public class CallBdd {
             @Override
             public void onResponse(String response) {
                 Log.d(LOG_TAG, "Retour BDD " + response);
-
                 setJson(response);
             }
         }, new Response.ErrorListener() {
@@ -108,12 +107,18 @@ public class CallBdd {
         queue.add(stringRequest);
     }
 
+    /**
+     * Ajout des parametres à l'url
+     * Envoie de la requete HTTP avec urlPhp
+     * Chaine de retour en parametre des fonctions de callback
+     */
     public void volleyRequeteHttpCallBack(Context context, final LoginActivity.CallBackBdd callback){
         ajoutArgumentPhpUrl(parametrePhp);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlPhp, new Response.Listener<String>() {
             @Override
-            public void onResponse(String response) {
+            public void onResponse(String response){
+                setJson(response);
                 callback.onSuccess(response);
             }
         }, new Response.ErrorListener() {

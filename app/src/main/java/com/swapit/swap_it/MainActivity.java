@@ -30,6 +30,7 @@ public class MainActivity extends AppCompatActivity
     private ViewPager viewPager;                                // Permet l'affichage de différentes activités
     private ViewPagerAdapter adapter;                           // Permet de choisir l'activité à afficher
     public static final String IDENTITE_USER = "IdentiteUser";
+    private static String LOG_TAG = "MainActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

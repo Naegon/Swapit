@@ -27,7 +27,7 @@ public class ProfileActivity extends AppCompatActivity {
 
     TextView textView_nom, textView_prenom, textView_swap, textView_mail, textView_tel, textView_description;
     String url, json_retour;
-    private static String LOG_TAG = "MainActivity";
+    private static String LOG_TAG = "ProfileActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
     @Override
     protected void onCreate(Bundle savedInstanceState) {

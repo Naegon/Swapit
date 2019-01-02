@@ -9,6 +9,7 @@ import com.swapit.swap_it.R;
 
 public class ConcerningActivity extends AppCompatActivity {
 
+    private static String LOG_TAG = "ConcerningActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
