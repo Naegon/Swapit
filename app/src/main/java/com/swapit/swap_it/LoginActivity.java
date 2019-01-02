@@ -33,12 +33,14 @@ import com.swapit.swap_it.CallBdd;
 // Page pour se connecter à son compte
 public class LoginActivity extends AppCompatActivity {
 
+    //TODO https://stackoverflow.com/questions/28120029/how-can-i-return-value-from-function-onresponse-of-volley
+    //TODO https://guides.codepath.com/android/Creating-Custom-Listeners
     Button button_creer_compte, button_connexion;
     EditText editText_email, editText_mdp;
     String url;
     TextView test;
     CheckBox checkBox_rester_co;
-    private static String LOG_TAG = "LogActvity";
+    private static String LOG_TAG = "LoginActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
 
     @Override
@@ -80,8 +82,12 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validiteSaisie()){
-                    CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
+                    final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
                     argumentPHP(loginHttp);
+
+                    //onPostHttpRequest(loginHttp.volleyRequeteHttp(getApplicationContext()), loginHttp);
+
+                    /*
                     loginHttp.volleyRequeteHttp(getApplicationContext());
                     if (loginHttp.Json.equals("false")){
                         loginHttp.reset();
@@ -91,11 +97,57 @@ public class LoginActivity extends AppCompatActivity {
                         json(loginHttp.getJson());
                         lancerPage(0);
                     }
+                    */
+
+                    loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBackBdd() {
+                        @Override
+                        public void onSuccess(String retourBDD){
+                            Log.d(LOG_TAG, "Call back success");
+                            if(retourBDD.equals("false")){
+                                Log.d(LOG_TAG, "Mauvais login : " + retourBDD);
+                                loginHttp.reset();
+                                badMdp();
+                            }
+                            else{
+                                Log.d(LOG_TAG, "Bon login : " + retourBDD);
+                                json(retourBDD);
+                                lancerPage(0);
+                            }
+                        }
+                        @Override
+                        public void onFail(){
+                            Log.d(LOG_TAG, "Call back fail");
+                            loginHttp.reset();
+                            badMdp();
+                            ///TODO insert toast "une erreur s'est produite"
+                        }
+                    });
                 }
             }
         });
     }
 
+    /*
+    public void onPostHttpRequest(String reponse, CallBdd loginHttp){
+        Log.d(LOG_TAG, "onPost retour " + reponse);
+        if (reponse.equals("false")){
+            loginHttp.reset();
+            badMdp();
+        }
+        else{
+            json(reponse);
+            lancerPage(0);
+        }
+    }
+    */
+
+    /**
+     * Callback du call BDD
+     */
+    public interface CallBackBdd{
+        void onSuccess(String retourBDD);
+        void onFail();
+    }
 
     /**
      * Quitte l'appli sur retour en arrière
@@ -201,7 +253,7 @@ public class LoginActivity extends AppCompatActivity {
             editor.apply();
 
         } catch (JSONException e) {
-            Log.v(LOG_TAG, "Erreur convertir json");
+            Log.d(LOG_TAG, "Erreur convertir json");
         }
     }
 

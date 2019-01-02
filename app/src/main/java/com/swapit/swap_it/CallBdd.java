@@ -1,6 +1,7 @@
 package com.swapit.swap_it;
 
 import android.content.Context;
+import android.media.MediaRouter;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -11,7 +12,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
-import java.util.List;
 
 public class CallBdd {
     private static String LOG_TAG = "CallBdd";
@@ -48,7 +48,6 @@ public class CallBdd {
     public void setUrl(String url) {
         this.url = url;
     }
-
 
     /**
      * Constructeur
@@ -96,13 +95,31 @@ public class CallBdd {
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlPhp, new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
-                Log.d(LOG_TAG, "Retour BDD" + response);
+                Log.d(LOG_TAG, "Retour BDD " + response);
+
                 setJson(response);
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 setJson("");
+            }
+        });
+        queue.add(stringRequest);
+    }
+
+    public void volleyRequeteHttpCallBack(Context context, final LoginActivity.CallBackBdd callback){
+        ajoutArgumentPhpUrl(parametrePhp);
+        RequestQueue queue = Volley.newRequestQueue(context);
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, urlPhp, new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                callback.onSuccess(response);
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                callback.onFail();
             }
         });
         queue.add(stringRequest);

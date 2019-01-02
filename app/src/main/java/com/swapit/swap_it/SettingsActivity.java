@@ -37,6 +37,9 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_settings);
     }
 
+    /**
+     * Lancement des pages notifications, modification du mdp, suppression du compte
+     */
     public void notification(View view){
         Intent intent = new Intent(this, NotificationActivity.class);
         startActivity(intent);
@@ -58,6 +61,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     }
 
+    /**
+     * Affiche pop up de suppression du compte
+     */
     public void afficherDialog(){
         context = getApplicationContext();
         /*Dialog myDialog = new Dialog(context);
