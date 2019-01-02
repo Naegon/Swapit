@@ -58,6 +58,7 @@ public class LoginActivity extends AppCompatActivity {
         SharedPreferences.Editor pref_user_editor = getSharedPreferences(IDENTITE_USER,MODE_PRIVATE).edit();
 
         //Gestion option garder en mémoire mail/mdp
+        //TODO il faut rappeler la connexion ( /!\ si l'utilisateur modifie la saisie)
         if (pref_user.getString("keep", "null").equals("true")){
             editText_mdp.setText(pref_user.getString("mdp", "null"));
             editText_email.setText(pref_user.getString("mail", "null"));
@@ -81,42 +82,36 @@ public class LoginActivity extends AppCompatActivity {
         button_connexion.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
+                //si la saisie est valide (champs non vide)
                 if (validiteSaisie()){
+
+                    //creation de l'objet de type CallBdd pour la connexion
                     final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
                     argumentPHP(loginHttp);
 
-                    //onPostHttpRequest(loginHttp.volleyRequeteHttp(getApplicationContext()), loginHttp);
 
-                    /*
-                    loginHttp.volleyRequeteHttp(getApplicationContext());
-                    if (loginHttp.Json.equals("false")){
-                        loginHttp.reset();
-                        badMdp();
-                    }
-                    else{
-                        json(loginHttp.getJson());
-                        lancerPage(0);
-                    }
-                    */
-
+                    //listener sur la requete
                     loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBackBdd() {
+                        //si la requete est faite
                         @Override
                         public void onSuccess(String retourBDD){
                             Log.d(LOG_TAG, "Call back success");
+                            //si le mdp/login est faux
                             if(retourBDD.equals("false")){
                                 Log.d(LOG_TAG, "Mauvais login : " + retourBDD);
                                 loginHttp.reset();
                                 badMdp();
-                            }
+                            }//si c'est bon
                             else{
                                 Log.d(LOG_TAG, "Bon login : " + retourBDD);
                                 json(retourBDD);
                                 lancerPage(0);
                             }
                         }
+                        //si erreur dans la requete
                         @Override
-                        public void onFail(){
-                            Log.d(LOG_TAG, "Call back fail");
+                        public void onFail(String retourBDD){
+                            Log.d(LOG_TAG, "Call back fail, erreur : " + retourBDD);
                             loginHttp.reset();
                             badMdp();
                             ///TODO insert toast "une erreur s'est produite"
@@ -127,26 +122,13 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
-    /*
-    public void onPostHttpRequest(String reponse, CallBdd loginHttp){
-        Log.d(LOG_TAG, "onPost retour " + reponse);
-        if (reponse.equals("false")){
-            loginHttp.reset();
-            badMdp();
-        }
-        else{
-            json(reponse);
-            lancerPage(0);
-        }
-    }
-    */
 
     /**
      * Callback du call BDD
      */
     public interface CallBackBdd{
-        void onSuccess(String retourBDD);
-        void onFail();
+        void onSuccess(String a);
+        void onFail(String a);
     }
 
     /**

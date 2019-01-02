@@ -119,7 +119,7 @@ public class CallBdd {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                callback.onFail();
+                callback.onFail(error.toString());
             }
         });
         queue.add(stringRequest);
