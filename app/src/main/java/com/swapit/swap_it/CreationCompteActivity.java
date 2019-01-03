@@ -30,7 +30,6 @@ public class CreationCompteActivity extends AppCompatActivity {
     EditText email, telephone, nom, prenom, bio, mdp, confirmer_mdp;
     Spinner spinner_section, spinner_promo, spinner_add;
     private static String LOG_TAG = "CreationCompteActivity";
-    String retour_bdd;
     public static final String ISCREATION = "iscreation";
 
 
@@ -66,38 +65,59 @@ public class CreationCompteActivity extends AppCompatActivity {
         });
 
         //listener sur le bouton valider
-        valider.setOnClickListener(new View.OnClickListener() {
+        valider.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
                 if (validitéProfil()){
-                    String url = urlPHP();
-                    new MakeNetworkCall().execute(url, "GET");
                     final CallBdd creationCompteHttp = new CallBdd("http://91.121.116.121/swapit/creer_utilisateur.php?");
-
-
+                    argumentPHP(creationCompteHttp);
+                    creationCompteHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+                        @Override
+                        public void onSuccess(String retourBdd) {
+                            if(retourBdd.equals("false")){
+                                Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : " + retourBdd);
+                                creationCompteHttp.reset();
+                                afficherToast("Erreur dans la recuperation du profil");
+                                resetAll();
+                            }//si c'est bon
+                            else{
+                                Log.d(LOG_TAG, "Compte crée");
+                                afficherToast("Compte crée");
+                                lancerLogin();
+                            }
+                        }
+                        @Override
+                        public void onFail(String retourBdd) {
+                            Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : ");
+                            creationCompteHttp.reset();
+                            afficherToast("Erreur dans la creation du profil");
+                            resetAll();
+                        }
+                    });
                 }
             }
         });
     }
 
-    //affichage des toast echec/reussite
-    public void afficherToastVrai(){
-        Toast toast  = Toast.makeText(getApplicationContext(), "Compte crée", Toast.LENGTH_LONG);
+    /**
+     * Affichage d'un toast avec le @param message
+     */
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
-        lancerLogin();
     }
 
-    public void afficherToastFaux(){
-        Toast toast = Toast.makeText(getApplicationContext(), "Erreur dans la création du compte", Toast.LENGTH_LONG);
-        toast.show();
-        resetAll();
-    }
-
+    /**
+     * Lancement page login
+     */
     public void lancerLogin(){
         Intent intent = new Intent(this, LoginActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * Remplissage du spinner section en fonction de la position du spinner promo
+     */
     public void remplirSpinnerSection(int pos){
         if (pos > 3){ //remplissage majeur
             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.majeure_array, android.R.layout.simple_spinner_item);
@@ -111,8 +131,11 @@ public class CreationCompteActivity extends AppCompatActivity {
         }
     }
 
-    ///Fonctions de validité de la saisie
-    //l'adresse mail doit contenir les champs efrei,esigetel ou efreitech
+    /**
+     * Fonction de test si chaque champs saisi est valide
+     */
+
+
     //TODO : a completer en fonction de ce qu'on veut
     public boolean validitéEmail(){
         String string_email = email.getText().toString();
@@ -127,7 +150,6 @@ public class CreationCompteActivity extends AppCompatActivity {
 
     public boolean validitéTelephone(){
         // converti en entier la chaine recuperer dans l'editText)
-        //int num = Integer.parseInt(telephone.getText().toString());
         String string_numero = telephone.getText().toString();
         boolean ok = true;
         valider.setError(null);
@@ -201,6 +223,10 @@ public class CreationCompteActivity extends AppCompatActivity {
         }
         return ok;
     }
+
+    /**
+     * Validité de la saisie totale
+     */
     public boolean validitéProfil(){
         boolean ok = true;
         if (!validitéEmail()){
@@ -227,196 +253,25 @@ public class CreationCompteActivity extends AppCompatActivity {
         return ok;
     }
 
-    //recuperer dans une chaine pour les parametre du script annonce
-    public String argumentPHP(){
-        //TODO enlever mot de passe en hardcode
-        String param = "nom=" + nom.getText().toString() + "&"
-                + "mdp=" + mdp.getText().toString() + "&"
-                + "adresse_mail=" + email.getText().toString() + "&"
-                + "prenom=" + prenom.getText().toString() + "&"
-                + "annee=" + spinner_promo.getSelectedItem().toString() + "&"
-                + "nbpoints=" + "100" + "&"
-                + "numerotel=" + telephone.getText().toString() + "&"
-                + "filiere=" + spinner_add.getSelectedItem().toString() + "&"
-                + "biographie=" + bio.getText().toString() + "&"
-                + "section=" + spinner_section.getSelectedItem().toString();
-        return param;
-
+    /**
+     * Ajoute les arguments PHP à l'objet CallBdd
+     */
+    public void argumentPHP(CallBdd profileHttp){
+        profileHttp.ajoutArgumentPhpList("nom", nom.getText().toString());
+        profileHttp.ajoutArgumentPhpList("mdp", mdp.getText().toString());
+        profileHttp.ajoutArgumentPhpList("adresse_mail", email.getText().toString());
+        profileHttp.ajoutArgumentPhpList("prenom", prenom.getText().toString());
+        profileHttp.ajoutArgumentPhpList("annee", spinner_promo.getSelectedItem().toString());
+        profileHttp.ajoutArgumentPhpList("nbpoints", "100");
+        profileHttp.ajoutArgumentPhpList("numerotel", telephone.getText().toString());
+        profileHttp.ajoutArgumentPhpList("filiere", spinner_add.getSelectedItem().toString());
+        profileHttp.ajoutArgumentPhpList("biographie", bio.getText().toString());
+        profileHttp.ajoutArgumentPhpList("section", spinner_section.getSelectedItem().toString());
     }
 
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        //url = "http://91.121.116.121/swapit/creer_utilisateur.php?" + param;
-        //TODO changer call bdd
-        url = "http://91.121.116.121/swapit/creer_utilisateur.php?" + param;
-        Log.d(LOG_TAG, "URL : " + url);
-        return url;
-    }
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-
-
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO ICI affichage test
-        //TextView TxtResult = (TextView) findViewById(R.id.textViewTest);
-        //TxtResult.setText(a);
-        //valider.setText(a);
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            String res = "";
-
-
-            is = ByGetMethod(URL);
-
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-            Log.d(LOG_TAG, "1 Retour BDD background: " + res);
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            //remplirRetour(result);
-            //remplirShared(result);
-            if (result.equals("true")){
-                afficherToastVrai();
-            }
-            else{
-                afficherToastFaux();
-            }
-            Log.d(LOG_TAG, "3 Retour call BDD : " + result);
-        }
-    }
-
-    //reset tout les champs à l'etat initial
+    /**
+     * Reset tous les champs de textes à vide
+     */
     void resetAll(){
         prenom.setText(null);
         nom.setText(null);
