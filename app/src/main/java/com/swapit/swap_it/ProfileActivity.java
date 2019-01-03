@@ -29,10 +29,13 @@ public class ProfileActivity extends AppCompatActivity {
     String url, json_retour;
     private static String LOG_TAG = "ProfileActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile);
+
+        //TODO : ajouter un bouton recharger la page
 
         textView_description = findViewById(R.id.textView_profil_description_user);
         textView_mail = findViewById(R.id.textView_profil_mail);
@@ -43,10 +46,36 @@ public class ProfileActivity extends AppCompatActivity {
         json_retour = null;
 
         viderTextview();
-        url = urlPHP();
-        new MakeNetworkCall().execute(url, "GET");
+        final CallBdd profileHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_compte.php?");
+        argumentPHP(profileHttp);
+
+        //call BDD
+        profileHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd) {
+                if(retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la recuperation du profil : " + retourBdd);
+                    profileHttp.reset();
+                    afficherToast("Erreur dans la recuperation du profil");
+                }//si c'est bon
+                else{
+                    Log.d(LOG_TAG, "Profil utilisateur  : " + retourBdd);
+                    json(retourBdd);
+                }
+            }
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans le call BDD : " + retourBdd);
+                profileHttp.reset();
+                afficherToast("Erreur dans l'appel à la BDD");
+            }
+        });
     }
 
+
+    /**
+     * Remise à 0 des textviews
+     */
     public void viderTextview(){
         textView_tel.setText(null);
         textView_prenom.setText(null);
@@ -56,18 +85,18 @@ public class ProfileActivity extends AppCompatActivity {
         textView_mail.setText(null);
     }
 
-    public String argumentPHP(){
-        String nom = retrieveDataUser("nom");
-        String prenom = retrieveDataUser("prenom");
-        String mail = retrieveDataUser("mail");
-
-        String param = "prenom=" + prenom + "&"
-                + "nom=" + nom + "&"
-                + "adresse_mail=" + mail;
-        return param;
+    /**
+     * Ajoute les arguments PHP à l'objet CallBdd
+     */
+    public void argumentPHP(CallBdd profileHttp){
+        profileHttp.ajoutArgumentPhpList("prenom", retrieveDataUser("prenom"));
+        profileHttp.ajoutArgumentPhpList("nom", retrieveDataUser("nom"));
+        profileHttp.ajoutArgumentPhpList("adresse_mail", retrieveDataUser("mail"));
     }
 
-    //recupere les data_user
+    /**
+     * Renvoie la donnée de l'utilisateur stocké dans le shared preference à la clé @param id
+     */
     public String retrieveDataUser(String id){
         SharedPreferences prefs_id = getSharedPreferences(IDENTITE_USER, MODE_PRIVATE);
         String data = null;
@@ -83,179 +112,9 @@ public class ProfileActivity extends AppCompatActivity {
         return data;
     }
 
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        url = "http://91.121.116.121/swapit/renvoyer_info_compte.php?" + param;
-        Log.d(LOG_TAG, "Error : " + url);
-        return url;
-    }
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            afficherErreurBddTimeout();
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-        //json(response.toString());
-        //getJsonRetour(response.toString());
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-
-       //textView_description.setText(a);
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //TODO afficher le please wait dans un popup
-            DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-            //res = json(res);
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            json(result);
-            //DisplayMessage(result);
-            Log.d(LOG_TAG, "Result: " + result);
-        }
-    }
-
-
-    //recupere et stock l'obet Json renvoyer depuis PHP
+    /**
+     * Remplie les tewtviews avec les données de l'utilisateur à partir de la chaine de retour du Call BDD
+     */
     public void json(String a){
         try {
             JSONObject json = new JSONObject(a);
@@ -278,8 +137,11 @@ public class ProfileActivity extends AppCompatActivity {
         }
     }
 
-    public void afficherErreurBddTimeout(){
-        Toast toast = Toast.makeText(getApplicationContext(), "Erreur dans le chargement du profil", Toast.LENGTH_LONG);
+    /**
+     * Affiche un toast d'erreur avec le @param message
+     */
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
 }

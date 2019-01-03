@@ -39,6 +39,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
 
+        //declaration des variables
         valider = findViewById(R.id.validate_edit);
         email = findViewById(R.id.editMail);
         telephone = findViewById(R.id.editPhone);
@@ -51,8 +52,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         mdp = findViewById(R.id.edit_password);
         confirmer_mdp = findViewById(R.id.edit_confirm_password);
 
-
-        //listener sur le spinner de promp
+        //listener sur le spinner de promo
         spinner_promo.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -72,6 +72,9 @@ public class CreationCompteActivity extends AppCompatActivity {
                 if (validitéProfil()){
                     String url = urlPHP();
                     new MakeNetworkCall().execute(url, "GET");
+                    final CallBdd creationCompteHttp = new CallBdd("http://91.121.116.121/swapit/creer_utilisateur.php?");
+
+
                 }
             }
         });

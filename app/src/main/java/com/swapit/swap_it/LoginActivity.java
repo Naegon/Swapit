@@ -89,9 +89,8 @@ public class LoginActivity extends AppCompatActivity {
                     final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
                     argumentPHP(loginHttp);
 
-
                     //listener sur la requete
-                    loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBackBdd() {
+                    loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
                         //si la requete est faite
                         @Override
                         public void onSuccess(String retourBDD){
@@ -120,15 +119,6 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
-    }
-
-
-    /**
-     * Callback du call BDD
-     */
-    public interface CallBackBdd{
-        void onSuccess(String a);
-        void onFail(String a);
     }
 
     /**

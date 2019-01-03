@@ -112,7 +112,7 @@ public class CallBdd {
      * Envoie de la requete HTTP avec urlPhp
      * Chaine de retour en parametre des fonctions de callback
      */
-    public void volleyRequeteHttpCallBack(Context context, final LoginActivity.CallBackBdd callback){
+    public void volleyRequeteHttpCallBack(Context context, final CallBackBdd callback){
         ajoutArgumentPhpUrl(parametrePhp);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest stringRequest = new StringRequest(Request.Method.GET, urlPhp, new Response.Listener<String>() {
@@ -130,10 +130,21 @@ public class CallBdd {
         queue.add(stringRequest);
     }
 
+    /**
+     * Reset tous les attributs de l'objet
+     */
     public void reset(){
         Json = "";
         url = "";
         urlPhp = "";
         parametrePhp = null;
+    }
+
+    /**
+     * CallBack utilisés pour les call BDD
+     */
+    public interface CallBackBdd{
+        void onSuccess(String retourBdd);
+        void onFail(String retourBdd);
     }
 }
