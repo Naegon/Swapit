@@ -6,7 +6,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 
-import android.os.AsyncTask;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -20,25 +19,13 @@ import android.widget.TextView;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import com.swapit.swap_it.CallBdd;
 
 // Page pour se connecter à son compte
 public class LoginActivity extends AppCompatActivity {
 
-    //TODO https://stackoverflow.com/questions/28120029/how-can-i-return-value-from-function-onresponse-of-volley
-    //TODO https://guides.codepath.com/android/Creating-Custom-Listeners
     Button button_creer_compte, button_connexion;
     EditText editText_email, editText_mdp;
-    String url;
-    TextView test;
     CheckBox checkBox_rester_co;
     private static String LOG_TAG = "LoginActivity";
     public static final String IDENTITE_USER = "IdentiteUser";

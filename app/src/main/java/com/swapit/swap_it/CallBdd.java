@@ -1,7 +1,6 @@
 package com.swapit.swap_it;
 
 import android.content.Context;
-import android.media.MediaRouter;
 import android.util.Log;
 
 import com.android.volley.Request;

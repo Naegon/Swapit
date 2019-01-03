@@ -1,8 +1,6 @@
 package com.swapit.swap_it;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -14,23 +12,12 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
-import org.json.JSONArray;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 public class CreationCompteActivity extends AppCompatActivity {
 
     Button valider;
     EditText email, telephone, nom, prenom, bio, mdp, confirmer_mdp;
     Spinner spinner_section, spinner_promo, spinner_add;
     private static String LOG_TAG = "CreationCompteActivity";
-    public static final String ISCREATION = "iscreation";
 
 
     @Override
@@ -68,7 +55,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         valider.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                if (validitéProfil()){
+                if (validiteProfil()){
                     final CallBdd creationCompteHttp = new CallBdd("http://91.121.116.121/swapit/creer_utilisateur.php?");
                     argumentPHP(creationCompteHttp);
                     creationCompteHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
@@ -137,7 +124,7 @@ public class CreationCompteActivity extends AppCompatActivity {
 
 
     //TODO : a completer en fonction de ce qu'on veut
-    public boolean validitéEmail(){
+    public boolean validiteEmail(){
         String string_email = email.getText().toString();
         if (string_email.contains("@efrei.net") || string_email.contains("@efreitech.net") || string_email.contains("@esigetel.net")){
             return true;
@@ -148,7 +135,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         }
     }
 
-    public boolean validitéTelephone(){
+    public boolean validiteTelephone(){
         // converti en entier la chaine recuperer dans l'editText)
         String string_numero = telephone.getText().toString();
         boolean ok = true;
@@ -165,7 +152,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         return ok;
     }
 
-    public boolean validitéNom(){
+    public boolean validiteNom(){
         String string_nom = nom.getText().toString();
         boolean ok = true;
         if (string_nom.isEmpty()){
@@ -175,7 +162,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         return ok;
     }
 
-    public boolean validitéPrénom(){
+    public boolean validitePrenom(){
         String string_prenom = prenom.getText().toString();
         boolean ok = true;
         if (string_prenom.isEmpty()){
@@ -185,7 +172,7 @@ public class CreationCompteActivity extends AppCompatActivity {
         return ok;
     }
 
-    public boolean validitéBio(){
+    public boolean validiteBio(){
         String string_bio = bio.getText().toString();
         boolean ok = true;
         if (string_bio.isEmpty()){
@@ -227,21 +214,21 @@ public class CreationCompteActivity extends AppCompatActivity {
     /**
      * Validité de la saisie totale
      */
-    public boolean validitéProfil(){
+    public boolean validiteProfil(){
         boolean ok = true;
-        if (!validitéEmail()){
+        if (!validiteEmail()){
             ok = false;
         }
-        if (!validitéNom()){
+        if (!validiteNom()){
             ok = false;
         }
-        if (!validitéPrénom()){
+        if (!validitePrenom()){
             ok = false;
         }
-        if (!validitéTelephone()){
+        if (!validiteTelephone()){
             ok = false;
         }
-        if (!validitéBio()){
+        if (!validiteBio()){
             ok = false;
         }
         if ((spinner_section.getSelectedItemPosition() == 0) || (spinner_promo.getSelectedItemPosition() == 0) || (spinner_add.getSelectedItemPosition() == 0)){
