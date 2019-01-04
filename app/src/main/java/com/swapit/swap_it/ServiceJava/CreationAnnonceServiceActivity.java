@@ -17,6 +17,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.swapit.swap_it.CallBdd;
 import com.swapit.swap_it.MainActivity;
 import com.swapit.swap_it.R;
 
@@ -71,12 +72,38 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validiteSaisie()){
+                    /*
                     String u = urlPHP();
                     new MakeNetworkCall().execute(u , "GET");
                     //TODO securiser le lancement
-                    Toast toast = Toast.makeText(getApplicationContext(), "Annonce créée", Toast.LENGTH_LONG);
-                    toast.show();
-                    lancerMainPage();
+                    */
+
+                    final CallBdd creationAnnonceServiceHttp = new CallBdd("http://91.121.116.121/swapit/creer_annonce_service.php?");
+                    argumentPHP(creationAnnonceServiceHttp);
+                    creationAnnonceServiceHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+                        @Override
+                        public void onSuccess(String retourBdd) {
+                            Log.d(LOG_TAG, "Call back success");
+                            //si creation de l'annonce impossible
+                            if(retourBdd.equals("false")){
+                                Log.d(LOG_TAG, "Erreur dans la creation de l'annonce");
+                                creationAnnonceServiceHttp.reset();
+                                resetChamps();
+                            }//si c'est bon
+                            else{
+                                Log.d(LOG_TAG, "Annonce crée");
+                                afficherToast("Annonce crée");
+                                lancerMainPage();
+                            }
+                        }
+                        @Override
+                        public void onFail(String retourBdd) {
+                            Log.d(LOG_TAG, "Erreur dans la creation de l'annonce");
+                            creationAnnonceServiceHttp.reset();
+                            afficherToast("Erreur dans la creation de l'annonce");
+                            resetChamps();
+                        }
+                    });
                 }
             }
         });
@@ -90,13 +117,25 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Affichage du toast avec @param message
+     */
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
+        toast.show();
+    }
 
+    /**
+     * Lance la MainActivity
+     */
     public void lancerMainPage(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
-    //test de validité de la saisie du nb de swap
+    /**
+     * Fonction de tests si les champs saisies sont valides
+     */
     // TODO definir les limites avec le groupe
     public boolean swapValide() {
         String swap = nb_swap.getText().toString();
@@ -112,7 +151,6 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         }
     }
 
-    //test de validité de la date choisie
     public boolean timeValide() {
         //Recuperation de la date actuelle puis conversion des jours, mois... en chaines de char
         Calendar calendrier_now = Calendar.getInstance();
@@ -128,7 +166,6 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         }
     }
 
-    //test de validité de la description
     public boolean validiteDescription(){
         boolean ok = true;
         description.setError(null);
@@ -143,7 +180,6 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         return ok;
     }
 
-    //test de validité de la saisie entiere
     public boolean validiteSaisie(){
         boolean ok = true;
         if (!swapValide()){
@@ -161,7 +197,9 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         return ok;
     }
 
-    //choix de la date
+    /**
+     * Choix de la date + remplissage du textviex date
+     */
     public void choiceDate() {
         final Calendar c_date = Calendar.getInstance();
         mYear = c_date.get(Calendar.YEAR);
@@ -181,7 +219,9 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
-    //remplissage spiner sous-categories
+    /**
+     * Remplissage du spinner sous catégories en fonction du catégorie
+     */
     public void remplissageSpinnerSousCategorie(){
         int pos = spinner_categorie.getSelectedItemPosition();
         if (pos == 1){
@@ -201,36 +241,35 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Remplissage du spinner catégorie
+     */
     public void remplissageSpinnerCategorie(){
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.categorie_service, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_categorie.setAdapter(adapter);
     }
 
-    //construction des arguments à passer dans l'url
-    public String argumentPHP(){
+    /**
+     * Ajout des arguments à l'objet CallBdd
+     * @param loginHttp
+     */
+    public void argumentPHP(CallBdd loginHttp){
+        //creation de l'objet annonce
         AnnonceServiceClass annonce = creationObjectAnnonce();
-        String param = "prenom=" + annonce.getPrenom() + "&"
-                + "nom=" + annonce.getNom() + "&"
-                + "nb_swap=" + annonce.getNb_swap() + "&"
-                + "categorie=" + annonce.getCategorie() + "&"
-                + "sous_categorie=" + annonce.getSous_categorie() + "&"
-                + "date=" + annonce.getDate() + "&"
-                + "description=" + annonce.getDescription();
-        return param;
-
+        //recuperation des attributs
+        loginHttp.ajoutArgumentPhpList("prenom", annonce.getPrenom());
+        loginHttp.ajoutArgumentPhpList("nom", annonce.getNom());
+        loginHttp.ajoutArgumentPhpList("nb_swap", annonce.getNb_swap());
+        loginHttp.ajoutArgumentPhpList("categorie", annonce.getCategorie());
+        loginHttp.ajoutArgumentPhpList("sous_categorie", annonce.getSous_categorie());
+        loginHttp.ajoutArgumentPhpList("date",  annonce.getDate());
+        loginHttp.ajoutArgumentPhpList("description", annonce.getDescription());
     }
 
-    //creation de l'url pour la saisie BDD
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        url = "http://91.121.116.121/swapit/creer_annonce_service.php?" + param;
-        return url;
-    }
-
-    //creation d'un objet annonce service
+    /**
+     * Creation et retour d'un objet de type Annonce service
+     */
     public AnnonceServiceClass creationObjectAnnonce(){
         AnnonceServiceClass annonce = new AnnonceServiceClass();
         String swap = nb_swap.getText().toString();
@@ -247,7 +286,9 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         return annonce;
     }
 
-    //recupere les données stockes de l'utilisateur
+    /**
+     * Recupere les données utilisateur stockés dans le sharedpreference
+     */
     public String retrieveDataUser(String id){
         SharedPreferences prefs_id = getSharedPreferences(IDENTITE_USER, MODE_PRIVATE);
         String data = null;
@@ -260,167 +301,19 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         return data;
     }
 
-    InputStream ByGetMethod(String ServerURL) {
+    /**
+     * Remise à 0 de tous les champs de saisie
+     */
+    public void resetChamps(){
+        final Calendar c_date = Calendar.getInstance();
+        mYear = c_date.get(Calendar.YEAR);
+        mMonth = c_date.get(Calendar.MONTH);
+        mDay = c_date.get(Calendar.DAY_OF_MONTH);
 
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-
-
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO mettre popup
-        /*
-        TextView TxtResult = (TextView) findViewById(R.id.textView_test_service);
-        TxtResult.setText(a);
-        */
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-                Log.e(LOG_TAG, "something went wrong");
-            }
-
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            //DisplayMessage(result);
-            Log.d(LOG_TAG, "Result: " + result);
-        }
+        spinner_categorie.setSelection(0);
+        spinner_sous_categorie.setSelection(0);
+        textview_date.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+        nb_swap.setText(null);
+        description.setText(null);
     }
 }

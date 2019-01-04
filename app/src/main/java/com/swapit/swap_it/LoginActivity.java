@@ -80,24 +80,24 @@ public class LoginActivity extends AppCompatActivity {
                     loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
                         //si la requete est faite
                         @Override
-                        public void onSuccess(String retourBDD){
+                        public void onSuccess(String retourBdd){
                             Log.d(LOG_TAG, "Call back success");
                             //si le mdp/login est faux
-                            if(retourBDD.equals("false")){
-                                Log.d(LOG_TAG, "Mauvais login : " + retourBDD);
+                            if(retourBdd.equals("false")){
+                                Log.d(LOG_TAG, "Mauvais login : " + retourBdd);
                                 loginHttp.reset();
                                 badMdp();
                             }//si c'est bon
                             else{
-                                Log.d(LOG_TAG, "Bon login : " + retourBDD);
-                                json(retourBDD);
+                                Log.d(LOG_TAG, "Bon login : " + retourBdd);
+                                json(retourBdd);
                                 lancerPage(0);
                             }
                         }
                         //si erreur dans la requete
                         @Override
-                        public void onFail(String retourBDD){
-                            Log.d(LOG_TAG, "Call back fail, erreur : " + retourBDD);
+                        public void onFail(String retourBdd){
+                            Log.d(LOG_TAG, "Call back fail, erreur : " + retourBdd);
                             loginHttp.reset();
                             badMdp();
                             ///TODO insert toast "une erreur s'est produite"
