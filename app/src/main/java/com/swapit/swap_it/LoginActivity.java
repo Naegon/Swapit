@@ -49,10 +49,11 @@ public class LoginActivity extends AppCompatActivity {
         if (pref_user.getString("keep", "null").equals("true")){
             editText_mdp.setText(pref_user.getString("mdp", "null"));
             editText_email.setText(pref_user.getString("mail", "null"));
+            checkBox_rester_co.setChecked(true);
             button_connexion.setOnClickListener(new OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    lancerPage(0);
+                    requeteHttp();
                 }
             });
         }
@@ -71,39 +72,45 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //si la saisie est valide (champs non vide)
                 if (validiteSaisie()){
-
-                    //creation de l'objet de type CallBdd pour la connexion
-                    final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
-                    argumentPHP(loginHttp);
-
-                    //listener sur la requete
-                    loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
-                        //si la requete est faite
-                        @Override
-                        public void onSuccess(String retourBdd){
-                            Log.d(LOG_TAG, "Call back success");
-                            //si le mdp/login est faux
-                            if(retourBdd.equals("false")){
-                                Log.d(LOG_TAG, "Mauvais login : " + retourBdd);
-                                loginHttp.reset();
-                                badMdp();
-                            }//si c'est bon
-                            else{
-                                Log.d(LOG_TAG, "Bon login : " + retourBdd);
-                                json(retourBdd);
-                                lancerPage(0);
-                            }
-                        }
-                        //si erreur dans la requete
-                        @Override
-                        public void onFail(String retourBdd){
-                            Log.d(LOG_TAG, "Call back fail, erreur : " + retourBdd);
-                            loginHttp.reset();
-                            badMdp();
-                            ///TODO insert toast "une erreur s'est produite"
-                        }
-                    });
+                    requeteHttp();
                 }
+            }
+        });
+    }
+
+    /**
+     * Call BDD
+     */
+    public void requeteHttp(){
+        //creation de l'objet de type CallBdd pour la connexion
+        final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
+        argumentPHP(loginHttp);
+
+        //listener sur la requete
+        loginHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+            //si la requete est faite
+            @Override
+            public void onSuccess(String retourBdd){
+                Log.d(LOG_TAG, "Call back success");
+                //si le mdp/login est faux
+                if(retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Mauvais login/mdp : " + retourBdd);
+                    loginHttp.reset();
+                    badMdp();
+                }//si c'est bon
+                else{
+                    Log.d(LOG_TAG, "Bon login : " + retourBdd);
+                    json(retourBdd);
+                    lancerPage(0);
+                }
+            }
+            //si erreur dans la requete
+            @Override
+            public void onFail(String retourBdd){
+                Log.d(LOG_TAG, "Call back fail, erreur : " + retourBdd);
+                loginHttp.reset();
+                badMdp();
+                ///TODO insert toast "une erreur s'est produite"
             }
         });
     }
