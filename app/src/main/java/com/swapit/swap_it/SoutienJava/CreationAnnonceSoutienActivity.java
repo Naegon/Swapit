@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,27 +19,17 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.swapit.swap_it.CallBdd;
 import com.swapit.swap_it.MainActivity;
 import com.swapit.swap_it.R;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Calendar;
-import java.util.Date;
 
 
 public class CreationAnnonceSoutienActivity extends AppCompatActivity {
 
     Button valider;
-    int mYear, mMonth, mDay, mHour, mMinute, dayNow, monthNow, yearNow, test;
-    TextView textview_date, textview_time;
-    String now, selection;
-    Date dateSelection, dateNow;
+    int mYear, mMonth, mDay;
+    TextView textview_date;
     AutoCompleteTextView nb_swap;
     AutoCompleteTextView editext_description;
     Spinner spinner_semestre, spinner_matiere, spinner_ue;
@@ -67,12 +56,11 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         spinner_matiere = findViewById(R.id.spinner_matiere);
         textview_date = findViewById(R.id.textView_date);
 
-        //TODO inserer dialog window avant de quitter la page
+
         //listener sur les spinners
         chooseCycle(); //remplissage des 3 spinners à la creation du semestre
         spinner_semestre.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
-            //TODO chech si fonctionne
             public void onItemSelected(AdapterView<?> adapterView, View view, int position, long id) {
                 //rempli les spinner matiere en fonction des radios boutons
                 if (radiobutton_license.isChecked()){
@@ -87,7 +75,7 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView) {
-                // TODO Auto-generated method stub
+
             }
         });
 
@@ -124,24 +112,61 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (validiterSaisie()){
                     //inserer ici appel des fonctions pour envoie des données à la BDD
-                    String u = urlPHP();
-                    new MakeNetworkCall().execute(u , "Get");
-                    Toast toast = Toast.makeText(getApplicationContext(), "Annonce créée", Toast.LENGTH_LONG);
-                    toast.show();
-                    lancerMainActivity();
+                    //String u = urlPHP();
+                    //new MakeNetworkCall().execute(u , "Get");
+
+                    final CallBdd creationAnnonceSoutienHttp = new CallBdd("http://91.121.116.121/swapit/creer_annonce_soutien.php?");
+                    argumentPHP(creationAnnonceSoutienHttp);
+                    creationAnnonceSoutienHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+                        @Override
+                        public void onSuccess(String retourBdd) {
+                            Log.d(LOG_TAG, "Call back success : " + retourBdd);
+                            //si creation de l'annonce impossible
+                            if(retourBdd.equals("false")){
+                                Log.d(LOG_TAG, "Erreur dans la creation de l'annonce");
+                                creationAnnonceSoutienHttp.reset();
+                                resetChamps();
+                            }//si c'est bon
+                            else{
+                                Log.d(LOG_TAG, "Annonce crée");
+                                afficherToast("Annonce crée");
+                                lancerMainPage();
+                            }
+                        }
+                        @Override
+                        public void onFail(String retourBdd) {
+                            Log.d(LOG_TAG, "Erreur dans la creation de l'annonce : " + retourBdd);
+                            creationAnnonceSoutienHttp.reset();
+                            afficherToast("Erreur dans la creation de l'annonce");
+                            resetChamps();
+                        }
+                    });
                 }
             }
         });
     }
 
 
-    public void lancerMainActivity(){
+    /**
+     * Affichage du toast avec @param message
+     */
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getApplicationContext(),message, Toast.LENGTH_LONG);
+        toast.show();
+    }
+
+    /**
+     * Lance la MainActivity
+     */
+    public void lancerMainPage(){
         Intent intent = new Intent(this, MainActivity.class);
         startActivity(intent);
     }
 
 
-    //choix de la date sur le calendrier
+    /**
+     * Choix de la date + remplissage du textviex date
+     */
     public void choiceDate() {
         final Calendar c_date = Calendar.getInstance();
         mYear = c_date.get(Calendar.YEAR);
@@ -162,7 +187,9 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
     }
 
 
-    //test de validité de la saisie du nb de swap
+    /**
+     * Fonction de tests si les champs saisies sont valides
+     */
     // TODO definir les limites avec le groupe
     public boolean swapValide() {
         String swap = nb_swap.getText().toString();
@@ -197,14 +224,6 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         }
     }
 
-    public void chooseCycle(){
-        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choose_cycle, android.R.layout.simple_spinner_item);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner_semestre.setAdapter(adapter);
-        spinner_ue.setAdapter(adapter);
-        spinner_matiere.setAdapter(adapter);
-    }
-
     public boolean spinnerValide() {
         if ((spinner_ue.getSelectedItemPosition() == 0) || (spinner_semestre.getSelectedItemPosition() == 0)) {
             return false;
@@ -227,7 +246,6 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         return ok;
     }
 
-
     public boolean validiterSaisie() {
         boolean annonce_valide = true;
         if (!swapValide()) {
@@ -248,6 +266,17 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         return annonce_valide;
     }
 
+    public void chooseCycle(){
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choose_cycle, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_semestre.setAdapter(adapter);
+        spinner_ue.setAdapter(adapter);
+        spinner_matiere.setAdapter(adapter);
+    }
+
+    /**
+     * Listener click sur les radiobutton licence et master
+     */
     public void onRadioButtonClicked(View view) {
         boolean checked = ((RadioButton) view).isChecked();
         switch (view.getId()) {
@@ -268,23 +297,36 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         }
     }
 
-    //rempli le spinner matiere en indiquant à l'utilisateur de remplir les deux autres spinner
+    /**
+     * Remplissage du spinner matiere
+     */
     void chooseItemSpinnerMatiere() {
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this, R.array.choose_item, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_matiere.setAdapter(adapter);
     }
+
+    /**
+     * Remplissage du spinner semestre pour la licence
+     */
     public void remplissageSpinnerSemestreLicense(){
         ArrayAdapter<CharSequence> adapter_semestre_licence = ArrayAdapter.createFromResource(this, R.array.semestre_licence_array, android.R.layout.simple_spinner_item);
         adapter_semestre_licence.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_semestre.setAdapter(adapter_semestre_licence);
     }
 
+    /**
+     * Remplissage du spinner semestre pour le master
+     */
     public void remplissageSpinnerSemestreMaster(){
         ArrayAdapter<CharSequence> adapter_semestre_master = ArrayAdapter.createFromResource(this, R.array.semestre_master_array, android.R.layout.simple_spinner_item);
         adapter_semestre_master.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner_semestre.setAdapter(adapter_semestre_master);
     }
+
+    /**
+     * Remplissage des matiere de master en fonnction des deux autres spinnner
+     */
     public void remplissageSpinnerMatiereMaster(){
         int ue_pos = spinner_ue.getSelectedItemPosition();
         int semestre_pos = spinner_semestre.getSelectedItemPosition();
@@ -439,7 +481,9 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         }
     }
 
-    //remplissage du spinner matiere en fonction des deux autres spinners
+    /**
+     * Remplissage des matiere de licence en fonnction des deux autres spinnner
+     */
     public void remplisageSpinnerMatiereLicence() {
         int ue_pos = spinner_ue.getSelectedItemPosition();
         int semestre_pos = spinner_semestre.getSelectedItemPosition();
@@ -586,15 +630,13 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         }
     }
 
-    //creation remplissage envoie d'un object de type AnnonceSoutienClass
+    /**
+     * Creation et retour d'un objet de type Annonce service
+     */
     public AnnonceSoutienClass creationObjectAnnonce(){
         AnnonceSoutienClass annonce = new AnnonceSoutienClass();
         String swap = nb_swap.getText().toString();
-        int nb = Integer.parseInt(nb_swap.getText().toString());
 
-        //TODO changer nom et prenom
-        //annonce.setPrenom_createur("prenomuser");
-        //annonce.setNom_createur("nomuuser");
         annonce.setPrenom_createur(retrieveDataUser("prenom"));
         annonce.setNom_createur(retrieveDataUser("nom"));
         annonce.setNb_swap(swap);
@@ -603,7 +645,6 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         annonce.setMatiere(spinner_matiere.getSelectedItem().toString());
         annonce.setSemestre(spinner_semestre.getSelectedItem().toString());
         annonce.setUe_majeur(spinner_ue.getSelectedItem().toString());
-
         return annonce;
     }
 
@@ -619,187 +660,37 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         return data;
     }
 
-    //recuperer dans une chaine pour les parametre du script annonce
-    public String argumentPHP(){
+    /**
+     * Ajout des arguments à l'objet CallBdd
+     */
+    public void argumentPHP(CallBdd loginHttp){
+        //creation de l'objet annonce
         AnnonceSoutienClass annonce = creationObjectAnnonce();
-
-        String param = "prenom=" + annonce.getPrenom_createur() + "&" + "nom=" + annonce.getNom_createur() + "&"
-                + "nbswap=" + annonce.getNb_swap() + "&"
-                + "semestre=" + annonce.getSemestre() + "&"
-                + "ue_majeur=" + annonce.getUe_majeur() + "&"
-                + "matiere=" + annonce.getMatiere() + "&"
-                + "date_limite=" + annonce.getDate_limite() + "&"
-                + "description=" + annonce.getDescripion();
-        return param;
-
+        //recuperation des attributs
+        loginHttp.ajoutArgumentPhpList("prenom", annonce.getPrenom_createur());
+        loginHttp.ajoutArgumentPhpList("nom", annonce.getNom_createur());
+        loginHttp.ajoutArgumentPhpList("nbswap", annonce.getNb_swap());
+        loginHttp.ajoutArgumentPhpList("semestre", annonce.getSemestre());
+        loginHttp.ajoutArgumentPhpList("ue_majeur", annonce.getUe_majeur());
+        loginHttp.ajoutArgumentPhpList("matiere", annonce.getMatiere());
+        loginHttp.ajoutArgumentPhpList("date_limite", annonce.getDate_limite());
+        loginHttp.ajoutArgumentPhpList("description", annonce.getDescripion());
     }
 
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        url = "http://91.121.116.121/swapit/creer_annonce_soutien.php?" + param;
-        Log.d(LOG_TAG, "Error : " + url);
-        return url;
+    /**
+     * Remise à 0 de tous les champs de saisie
+     */
+    public void resetChamps(){
+        final Calendar c_date = Calendar.getInstance();
+        mYear = c_date.get(Calendar.YEAR);
+        mMonth = c_date.get(Calendar.MONTH);
+        mDay = c_date.get(Calendar.DAY_OF_MONTH);
+
+        spinner_ue.setSelection(0);
+        spinner_semestre.setSelection(0);
+        spinner_matiere.setSelection(0);
+        textview_date.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+        nb_swap.setText(null);
+        editext_description.setText(null);
     }
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-
-
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO ICI affichage test
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-
-            DisplayMessage(result);
-            Log.d(LOG_TAG, "Result: " + result);
-        }
-    }
-
 }

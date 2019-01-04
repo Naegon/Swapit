@@ -3,7 +3,6 @@ package com.swapit.swap_it.ServiceJava;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -20,14 +19,6 @@ import android.widget.Toast;
 import com.swapit.swap_it.CallBdd;
 import com.swapit.swap_it.MainActivity;
 import com.swapit.swap_it.R;
-
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
 import java.util.Calendar;
 
 
@@ -83,7 +74,7 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
                     creationAnnonceServiceHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
                         @Override
                         public void onSuccess(String retourBdd) {
-                            Log.d(LOG_TAG, "Call back success");
+                            Log.d(LOG_TAG, "Call back success : " + retourBdd);
                             //si creation de l'annonce impossible
                             if(retourBdd.equals("false")){
                                 Log.d(LOG_TAG, "Erreur dans la creation de l'annonce");
@@ -98,7 +89,7 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
                         }
                         @Override
                         public void onFail(String retourBdd) {
-                            Log.d(LOG_TAG, "Erreur dans la creation de l'annonce");
+                            Log.d(LOG_TAG, "Erreur dans la creation de l'annonce : " + retourBdd);
                             creationAnnonceServiceHttp.reset();
                             afficherToast("Erreur dans la creation de l'annonce");
                             resetChamps();
@@ -252,7 +243,6 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
 
     /**
      * Ajout des arguments à l'objet CallBdd
-     * @param loginHttp
      */
     public void argumentPHP(CallBdd loginHttp){
         //creation de l'objet annonce
