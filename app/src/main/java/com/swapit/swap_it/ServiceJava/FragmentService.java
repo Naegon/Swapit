@@ -99,7 +99,6 @@ public class FragmentService extends Fragment {
             }
         });
         Log.d(LOG_TAG,"Lst 2 : " + lstService.toString());
-
     }
 
     public void callBddService(){
@@ -143,7 +142,7 @@ public class FragmentService extends Fragment {
             JSONObject json = new JSONObject(retour_BDD);
             JSONArray array = new JSONArray(json.getString("annonce"));
             for (int i = 0; i < array.length() ; i++ ){
-                Log.d(LOG_TAG, "Compte : " + i);
+                Log.d(LOG_TAG, "Annonce n° : " + i);
 
                 JSONObject obj = new JSONObject(array.getString(i));
 

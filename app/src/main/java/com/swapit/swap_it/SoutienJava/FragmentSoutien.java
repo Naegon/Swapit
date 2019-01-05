@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.swapit.swap_it.CallBdd;
 import com.swapit.swap_it.R;
 
 import org.json.JSONArray;
@@ -51,10 +53,31 @@ public class FragmentSoutien extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php";
-        Log.d(LOG_TAG, url);
+
         lstSoutien = new ArrayList<>();
 
+        CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
+        lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd){
+                if (retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                    afficherToast("Une erreur s'est produite");
+                }
+                else {
+                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
+                    remplissageSoutien(retourBdd);
+                }
+            }
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                afficherToast("Une erreur s'est produite");
+            }
+        });
+
+        /*
+        String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php";
         new MakeNetworkCall().execute(url, "GET");
         lstSoutien.add(new Soutien("Champs éléctromagnétiques", "Sarah Dote", "26-12-18", "42", R.drawable.ic_school, "Bonjour, j'ai vraiment besoin d'aide en champs électromagnétiques, surtout à l'approche des DE"));
         lstSoutien.add(new Soutien("Mathématiques du réel", "Anna Bolisant", "01-02-18", "50", R.drawable.ic_school, "Salut salut ! Les maths c'est pas trop ma spé, un ptit coup de main serait pas de refus. \nCheers !"));
@@ -64,167 +87,12 @@ public class FragmentSoutien extends Fragment {
         lstSoutien.add(new Soutien("Communication", "Jacques Ouwzi", "04-09-18", "31", R.drawable.ic_school, "Bonjour, j'ai besoin d'aide afin de comprendre mieux la méthode de la dissertation. J'ai vraiment du mal et je ne sais pas trop comment m'exercer !"));
         lstSoutien.add(new Soutien("Système de transmission", "Alain Terrieur", "24-12-18", "26", R.drawable.ic_school, "Bande de Bessel ? DSBSC sans porteuse cosinus de truc ? Connais pas :/ Si quelqu'un a un peu de patience pour m'expliquer tout ca la... C'est pas de refus"));
         lstSoutien.add(new Soutien("Système de transmission", "Baptiste Mathien", "21-12-18", "20", R.drawable.ic_school, "Besoin de comprendre la PLL"));
-
+        */
     }
 
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-
-
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO ICI affichage test
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            remplissageSoutien(result);
-            //DisplayMessage(result);
-            Log.d(LOG_TAG, "Result: " + result);
-        }
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public void remplissageSoutien(String retour_BDD){
@@ -236,13 +104,12 @@ public class FragmentSoutien extends Fragment {
         String swap = "";
         String description = "";
         String res = "";
-        Log.d(LOG_TAG, "res : " + retour_BDD);
 
         try {
             JSONObject json = new JSONObject(retour_BDD);
             JSONArray array = new JSONArray(json.getString("annonce"));
             for (int i = 0; i < array.length() ; i++ ){
-                Log.d(LOG_TAG, "Compte : " + i);
+                Log.d(LOG_TAG, "Annonce n° : " + i);
 
                 JSONObject obj = new JSONObject(array.getString(i));
 
