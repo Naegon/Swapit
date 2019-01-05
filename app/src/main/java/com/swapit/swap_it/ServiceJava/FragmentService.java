@@ -10,7 +10,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
+import com.swapit.swap_it.CallBdd;
 import com.swapit.swap_it.R;
 
 import org.json.JSONArray;
@@ -40,11 +42,18 @@ public class FragmentService extends Fragment {
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        Log.d(LOG_TAG, "onCreateView");
+
+        Log.d(LOG_TAG,"Lst 3 : " + lstService.toString());
+
         v = inflater.inflate(R.layout.service_fragment, container, false);
         myrecyclerview = (RecyclerView) v.findViewById(R.id.service_recycler);
         RecyclerServiceAdapter recyclerAdapter = new RecyclerServiceAdapter(getContext(), lstService);
         myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
         myrecyclerview.setAdapter(recyclerAdapter);
+
+        Log.d(LOG_TAG,"Lst 4 : " + lstService.toString());
         return v;
     }
 
@@ -52,8 +61,10 @@ public class FragmentService extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        Log.d(LOG_TAG, "onCreate");
         lstService = new ArrayList<>();
 
+        /*
         String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php";
         Log.d(LOG_TAG, url);
         new MakeNetworkCall().execute(url, "GET");
@@ -64,186 +75,58 @@ public class FragmentService extends Fragment {
         lstService.add(new Service("Me cherche un thon/mayo au Franprix", "Pierre Kiroule", "18-12-18", "2", "Il fait très faim et je suis bloqué en séance de TP sur l'heure du déjeuné :(\nAidez moi à remplir mon estomac gargouillant"));
         lstService.add(new Service("Recherche covoiturage", "Harry Cover", "21-12-18", "30", "Vendredi prochain c'est encore ces maudîtes grèves et mon metro ne fonctionnera pas.\nJe recherche une âme charitable pour me permettre d'aller en cours ! J'habite 6 rue de l'église, à Ville-sur-Fleuve"));
         lstService.add(new Service("Besoin d'une calculatrice", "Baptiste Mathien", "18-12-18", "10", "Besoin d'une calculatrice"));
-    }
+        */
 
-
-/*
-
-        @Override
-        public void onStart() {
-            super.onStart();
-            lstService = new ArrayList<>();
-            String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php";
-            Log.d(LOG_TAG, url);
-            new MakeNetworkCall().execute(url, "GET");
-        }
-
-        @Override
-        public void onResume() {
-            super.onResume();
-            lstService = new ArrayList<>();
-            String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php";
-            Log.d(LOG_TAG, url);
-            new MakeNetworkCall().execute(url, "GET");
-        }
-    */
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
+        Log.d(LOG_TAG,"Lst 1 : " + lstService.toString());
+        //TODO marche dans le onCreate en brut mais pas dans une fonction
+        CallBdd lstServiceHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php");
+        lstServiceHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd){
+                if (retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                    afficherToast("Une erreur s'est produite");
+                }
+                else {
+                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
+                    remplissageService(retourBdd);
+                }
             }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                afficherToast("Une erreur s'est produite");
+            }
+        });
+        Log.d(LOG_TAG,"Lst 2 : " + lstService.toString());
 
     }
 
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
+    public void callBddService(){
+        CallBdd lstServiceHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php");
+        lstServiceHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd){
+                if (retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                    afficherToast("Une erreur s'est produite");
+                }
+                else {
+                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
+                    remplissageService(retourBdd);
+                }
             }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                afficherToast("Une erreur s'est produite");
+            }
+        });
     }
 
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-
-
-        return response.toString();
-    }
-
-    public void DisplayMessage(String a) {
-        //TODO ICI affichage test
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            //DisplayMessage("Please Wait ...");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            remplissageService(result);
-            //DisplayMessage(result);
-            Log.d(LOG_TAG, "Result: " + result);
-        }
+    public void afficherToast(String message){
+        Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
+        toast.show();
     }
 
     public void remplissageService(String retour_BDD){
@@ -255,7 +138,6 @@ public class FragmentService extends Fragment {
         String swap = "";
         String description = "";
         String res = "";
-        Log.d(LOG_TAG, "res : " + retour_BDD);
 
         try {
             JSONObject json = new JSONObject(retour_BDD);

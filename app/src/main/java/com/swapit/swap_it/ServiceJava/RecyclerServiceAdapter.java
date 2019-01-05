@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +23,12 @@ public class RecyclerServiceAdapter extends RecyclerView.Adapter<RecyclerService
     Context mContext;
     List<Service> myData;
     Dialog myDialog;
+    private static String LOG_TAG = "RecyclerServiceAdapter";
 
     public RecyclerServiceAdapter(Context mContext, List<Service> mData) {
         this.mContext =mContext;
         this.myData = mData;
+        Log.d(LOG_TAG, "Lst recycler : " + mData.toString());
     }
 
 
