@@ -67,7 +67,7 @@ public class ProfileActivity extends AppCompatActivity {
             public void onFail(String retourBdd) {
                 Log.d(LOG_TAG, "Erreur dans le call BDD : " + retourBdd);
                 profileHttp.reset();
-                afficherToast("Erreur dans l'appel à la BDD");
+                afficherToast("Erreur dans la recuperation du profil");
             }
         });
     }

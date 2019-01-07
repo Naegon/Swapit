@@ -42,10 +42,31 @@ public class FragmentSoutien extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.soutien_fragment, container, false);
-        myrecyclerview = (RecyclerView) v.findViewById(R.id.soutien_recycler);
-        RecyclerSoutienAdapter recyclerAdapter = new RecyclerSoutienAdapter(getContext(), lstSoutien);
-        myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        myrecyclerview.setAdapter(recyclerAdapter);
+
+        CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
+        lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd){
+                if (retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                    afficherToast("Une erreur s'est produite");
+                }
+                else {
+                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
+                    remplissageSoutien(retourBdd);
+                    myrecyclerview = (RecyclerView) v.findViewById(R.id.soutien_recycler);
+                    RecyclerSoutienAdapter recyclerAdapter = new RecyclerSoutienAdapter(getContext(), lstSoutien);
+                    myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+                    myrecyclerview.setAdapter(recyclerAdapter);
+                }
+            }
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                afficherToast("Une erreur s'est produite");
+            }
+        });
+
         return v;
     }
 
@@ -55,7 +76,7 @@ public class FragmentSoutien extends Fragment {
         super.onCreate(savedInstanceState);
 
         lstSoutien = new ArrayList<>();
-
+/*
         CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
         lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
             @Override
@@ -76,9 +97,7 @@ public class FragmentSoutien extends Fragment {
             }
         });
 
-        /*
-        String url = "http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php";
-        new MakeNetworkCall().execute(url, "GET");
+
         lstSoutien.add(new Soutien("Champs éléctromagnétiques", "Sarah Dote", "26-12-18", "42", R.drawable.ic_school, "Bonjour, j'ai vraiment besoin d'aide en champs électromagnétiques, surtout à l'approche des DE"));
         lstSoutien.add(new Soutien("Mathématiques du réel", "Anna Bolisant", "01-02-18", "50", R.drawable.ic_school, "Salut salut ! Les maths c'est pas trop ma spé, un ptit coup de main serait pas de refus. \nCheers !"));
         lstSoutien.add(new Soutien("Physique quantique", "Anny Versaire", "17-02-18", "20", R.drawable.ic_school, "Hey !\nMoi c'est Anny, je patauge sévère en physique quantique, j'aurais bien besoin d'aide pour refaire les TD :/\nJ'ai assez peur que les examens tombent sur quelque chose que l'on à jamais vu ni en cours ni en TD... Absurde non ?"));
@@ -87,7 +106,7 @@ public class FragmentSoutien extends Fragment {
         lstSoutien.add(new Soutien("Communication", "Jacques Ouwzi", "04-09-18", "31", R.drawable.ic_school, "Bonjour, j'ai besoin d'aide afin de comprendre mieux la méthode de la dissertation. J'ai vraiment du mal et je ne sais pas trop comment m'exercer !"));
         lstSoutien.add(new Soutien("Système de transmission", "Alain Terrieur", "24-12-18", "26", R.drawable.ic_school, "Bande de Bessel ? DSBSC sans porteuse cosinus de truc ? Connais pas :/ Si quelqu'un a un peu de patience pour m'expliquer tout ca la... C'est pas de refus"));
         lstSoutien.add(new Soutien("Système de transmission", "Baptiste Mathien", "21-12-18", "20", R.drawable.ic_school, "Besoin de comprendre la PLL"));
-        */
+*/
     }
 
     public void afficherToast(String message){
