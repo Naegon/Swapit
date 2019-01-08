@@ -43,30 +43,7 @@ public class FragmentSoutien extends Fragment {
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         v = inflater.inflate(R.layout.soutien_fragment, container, false);
 
-        CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
-        lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
-            @Override
-            public void onSuccess(String retourBdd){
-                if (retourBdd.equals("false")){
-                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                    afficherToast("Une erreur s'est produite");
-                }
-                else {
-                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
-                    remplissageSoutien(retourBdd);
-                    myrecyclerview = (RecyclerView) v.findViewById(R.id.soutien_recycler);
-                    RecyclerSoutienAdapter recyclerAdapter = new RecyclerSoutienAdapter(getContext(), lstSoutien);
-                    myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    myrecyclerview.setAdapter(recyclerAdapter);
-                }
-            }
-            @Override
-            public void onFail(String retourBdd) {
-                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                afficherToast("Une erreur s'est produite");
-            }
-        });
-
+        callBddSoutien();
         return v;
     }
 
@@ -76,28 +53,8 @@ public class FragmentSoutien extends Fragment {
         super.onCreate(savedInstanceState);
 
         lstSoutien = new ArrayList<>();
+
 /*
-        CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
-        lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
-            @Override
-            public void onSuccess(String retourBdd){
-                if (retourBdd.equals("false")){
-                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                    afficherToast("Une erreur s'est produite");
-                }
-                else {
-                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
-                    remplissageSoutien(retourBdd);
-                }
-            }
-            @Override
-            public void onFail(String retourBdd) {
-                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                afficherToast("Une erreur s'est produite");
-            }
-        });
-
-
         lstSoutien.add(new Soutien("Champs éléctromagnétiques", "Sarah Dote", "26-12-18", "42", R.drawable.ic_school, "Bonjour, j'ai vraiment besoin d'aide en champs électromagnétiques, surtout à l'approche des DE"));
         lstSoutien.add(new Soutien("Mathématiques du réel", "Anna Bolisant", "01-02-18", "50", R.drawable.ic_school, "Salut salut ! Les maths c'est pas trop ma spé, un ptit coup de main serait pas de refus. \nCheers !"));
         lstSoutien.add(new Soutien("Physique quantique", "Anny Versaire", "17-02-18", "20", R.drawable.ic_school, "Hey !\nMoi c'est Anny, je patauge sévère en physique quantique, j'aurais bien besoin d'aide pour refaire les TD :/\nJ'ai assez peur que les examens tombent sur quelque chose que l'on à jamais vu ni en cours ni en TD... Absurde non ?"));
@@ -109,11 +66,49 @@ public class FragmentSoutien extends Fragment {
 */
     }
 
+    /**
+     * Apple base de données pour récuperer toutes annonces en JSON
+     * Si appel réussi : creer le recycler view
+     */
+    public void callBddSoutien(){
+        CallBdd lstSoutienHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_soutien_max.php");
+        lstSoutienHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd){
+                if (retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                    afficherToast("Une erreur s'est produite");
+                }
+                else {
+                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
+                    remplissageSoutien(retourBdd);
+                    setupRecyclerViewSoutien();
+                }
+            }
+            @Override
+            public void onFail(String retourBdd) {
+                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
+                afficherToast("Une erreur s'est produite");
+            }
+        });
+    }
+
+    public void setupRecyclerViewSoutien(){
+        myrecyclerview = (RecyclerView) v.findViewById(R.id.soutien_recycler);
+        RecyclerSoutienAdapter recyclerAdapter = new RecyclerSoutienAdapter(getContext(), lstSoutien);
+        myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        myrecyclerview.setAdapter(recyclerAdapter);
+    }
+
     public void afficherToast(String message){
         Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
 
+    /**
+     * Récupere chaque annonce depuis la chaine de retour de la BDD au format JSON
+     * Ajoute les annonces à la liste
+     */
     public void remplissageSoutien(String retour_BDD){
         String titre = "";
         String nom = "";

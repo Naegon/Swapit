@@ -45,43 +45,9 @@ public class FragmentService extends Fragment {
 
         Log.d(LOG_TAG, "onCreateView");
 
-        Log.d(LOG_TAG,"Lst 3 : " + lstService.toString());
-
-
         v = inflater.inflate(R.layout.service_fragment, container, false);
+        callBddService();
 
-        /*myrecyclerview = (RecyclerView) v.findViewById(R.id.service_recycler);
-        RecyclerServiceAdapter recyclerAdapter = new RecyclerServiceAdapter(getContext(), lstService);
-        myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-        myrecyclerview.setAdapter(recyclerAdapter);
-*/
-        CallBdd lstServiceHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php");
-        lstServiceHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
-            @Override
-            public void onSuccess(String retourBdd){
-                if (retourBdd.equals("false")){
-                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                    afficherToast("Une erreur s'est produite");
-                }
-                else {
-                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
-                    remplissageService(retourBdd);
-
-                    myrecyclerview = (RecyclerView) v.findViewById(R.id.service_recycler);
-                    RecyclerServiceAdapter recyclerAdapter = new RecyclerServiceAdapter(getContext(), lstService);
-                    myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
-                    myrecyclerview.setAdapter(recyclerAdapter);
-
-                }
-            }
-            @Override
-            public void onFail(String retourBdd) {
-                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                afficherToast("Une erreur s'est produite");
-            }
-        });
-
-        Log.d(LOG_TAG,"Lst 4 : " + lstService.toString());
         return v;
     }
 
@@ -101,33 +67,15 @@ public class FragmentService extends Fragment {
         lstService.add(new Service("Me cherche un thon/mayo au Franprix", "Pierre Kiroule", "18-12-18", "2", "Il fait très faim et je suis bloqué en séance de TP sur l'heure du déjeuné :(\nAidez moi à remplir mon estomac gargouillant"));
         lstService.add(new Service("Recherche covoiturage", "Harry Cover", "21-12-18", "30", "Vendredi prochain c'est encore ces maudîtes grèves et mon metro ne fonctionnera pas.\nJe recherche une âme charitable pour me permettre d'aller en cours ! J'habite 6 rue de l'église, à Ville-sur-Fleuve"));
         lstService.add(new Service("Besoin d'une calculatrice", "Baptiste Mathien", "18-12-18", "10", "Besoin d'une calculatrice"));
-*/
-
-        Log.d(LOG_TAG,"Lst 1 : " + lstService.toString());
-        /*
-        CallBdd lstServiceHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php");
-        lstServiceHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
-            @Override
-            public void onSuccess(String retourBdd){
-                if (retourBdd.equals("false")){
-                    Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                    afficherToast("Une erreur s'est produite");
-                }
-                else {
-                    Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
-                    remplissageService(retourBdd);
-                }
-            }
-            @Override
-            public void onFail(String retourBdd) {
-                Log.d(LOG_TAG, "Erreur dans la récupération des annonces services : " + retourBdd);
-                afficherToast("Une erreur s'est produite");
-            }
-        });
         */
-        Log.d(LOG_TAG,"Lst 2 : " + lstService.toString());
+
     }
 
+
+    /**
+     * Apple base de données pour récuperer toutes annonces en JSON
+     * Si appel réussi : creer le recycler view
+     */
     public void callBddService(){
         CallBdd lstServiceHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_annonce_service_max.php");
         lstServiceHttp.volleyRequeteHttpCallBack(getContext(), new CallBdd.CallBackBdd() {
@@ -140,6 +88,7 @@ public class FragmentService extends Fragment {
                 else {
                     Log.d(LOG_TAG, "Récupération réussi : " + retourBdd);
                     remplissageService(retourBdd);
+                    setupRecyclerViewService();
                 }
             }
             @Override
@@ -150,11 +99,26 @@ public class FragmentService extends Fragment {
         });
     }
 
+
+    public void setupRecyclerViewService(){
+        myrecyclerview = (RecyclerView) v.findViewById(R.id.service_recycler);
+        RecyclerServiceAdapter recyclerAdapter = new RecyclerServiceAdapter(getContext(), lstService);
+        myrecyclerview.setLayoutManager(new LinearLayoutManager(getActivity()));
+        myrecyclerview.setAdapter(recyclerAdapter);
+    }
+
+    /**
+     * Afffiche un toast avec le @param message
+     */
     public void afficherToast(String message){
         Toast toast = Toast.makeText(getContext(), message, Toast.LENGTH_LONG);
         toast.show();
     }
 
+    /**
+     * Récupere chaque annonce depuis la chaine de retour de la BDD au format JSON
+     * Ajoute les annonces à la liste
+     */
     public void remplissageService(String retour_BDD){
         String titre = "";
         String nom = "";
