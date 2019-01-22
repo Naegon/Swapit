@@ -3,8 +3,6 @@ package com.swapit.swap_it;
 import android.content.Context;
 import android.util.Log;
 
-// coucou
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
