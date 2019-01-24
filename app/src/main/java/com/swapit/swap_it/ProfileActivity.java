@@ -6,6 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Display;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -143,5 +144,9 @@ public class ProfileActivity extends AppCompatActivity {
     public void afficherToast(String message){
         Toast toast = Toast.makeText(getApplicationContext(), message, Toast.LENGTH_LONG);
         toast.show();
+    }
+
+    public void editDescription(View v){
+        textView_description.setText("test");
     }
 }

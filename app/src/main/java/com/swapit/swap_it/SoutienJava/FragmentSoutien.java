@@ -143,7 +143,6 @@ public class FragmentSoutien extends Fragment {
                 Log.d(LOG_TAG, "desc : " + description);
 
                 lstSoutien.add(new Soutien(titre,user , date , swap , R.drawable.ic_school , description));
-                //lstSoutien.add(new Soutien("Économie", "Alain Terrieur", "08/10", "12", R.drawable.ic_school, "Salut les amis\nJe recherche une âme charitable pour donner un peu de son temps afin de rattraper mon niveau déplorable en éco.\nDe l'aide pour faire les TAF serait la bienvenue !!"));
             }
         } catch (JSONException e) {
             Log.d(LOG_TAG, "Erreur");

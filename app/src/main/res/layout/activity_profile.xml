@@ -167,8 +167,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
-                    android:text="Edit"
-                    android:gravity="end"/>
+                    android:gravity="end"
+                    android:onClick="editDescription"
+                    android:text="Edit" />
 
             </LinearLayout>
 
