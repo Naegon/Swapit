@@ -164,12 +164,22 @@
                     android:textStyle="bold" />
 
                 <TextView
+                    android:id="@+id/textView_profil_edit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:gravity="end"
                     android:onClick="editDescription"
                     android:text="Edit" />
+                <TextView
+                    android:id="@+id/textView_profil_valider"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1.0"
+                    android:gravity="end"
+                    android:onClick="validerEditDescription"
+                    android:text="Valider"
+                    />
 
             </LinearLayout>
 
@@ -177,8 +187,12 @@
                 android:id="@+id/textView_profil_description_user"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Apprenez donc de moi pour entrer dans le fleuve. Lecture décidément bien faite pour inspirer des appréhensions au plus courageux. Tirer sur le peuple qui était avec moi au salut de la maison jetait à chaque instant d'horizon. Assise près de son corps et l'âme pour ne pas mépriser celui qu'elle croyait n'être plus sous les regards du profane, des plans successifs où les choses étaient de deux francs, et ses entretiens avec sa fille ? Élu par le peuple, obéissant à la souveraineté ? Continuellement, elle en a, doivent tomber asphyxiés d'ennui de leurs pages didactiques, mais il n'osa lui parler, je m'appellerais un jardinier. Sauriez-vous jouer de la clarinette ? Tête de cocu, cet homme ne donnait-il aucun signe de reconnaissance nous fîmes des révérences à la maîtresse de ton coeur, bien persuadé en cet instant capital. " />
-
+                android:text="Erreur" />
+            <EditText
+                android:id="@+id/editText_profil_description_user"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                />
         </LinearLayout>
     </ScrollView>
 

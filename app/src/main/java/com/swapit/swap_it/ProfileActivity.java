@@ -1,32 +1,22 @@
 package com.swapit.swap_it;
 
 import android.content.SharedPreferences;
-import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Display;
 import android.view.View;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import com.swapit.swap_it.R;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 // Page d'affichage du profile utilisateur
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView textView_nom, textView_prenom, textView_swap, textView_mail, textView_tel, textView_description;
+    TextView textView_nom, textView_prenom, textView_swap, textView_mail, textView_tel, textView_description, textView_valider, textView_edit;
+    EditText editText_description;
     String url, json_retour;
     private static String LOG_TAG = "ProfileActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
@@ -39,16 +29,22 @@ public class ProfileActivity extends AppCompatActivity {
         //TODO : ajouter un bouton recharger la page
 
         textView_description = findViewById(R.id.textView_profil_description_user);
+        textView_valider = findViewById(R.id.textView_profil_valider);
+        textView_edit = findViewById(R.id.textView_profil_edit);
         textView_mail = findViewById(R.id.textView_profil_mail);
         textView_nom = findViewById(R.id.textView_profil_nom);
         textView_prenom = findViewById(R.id.textView_profil_prenom);
         textView_swap = findViewById(R.id.textView_profil_swap);
         textView_tel = findViewById(R.id.textView_profil_telephone);
+        editText_description = findViewById(R.id.editText_profil_description_user);
         json_retour = null;
 
+
         viderTextview();
+        hideViewEditDescription();
+
         final CallBdd profileHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_compte.php?");
-        argumentPHP(profileHttp);
+        argumentPhpRecupererInfo(profileHttp);
 
         //call BDD
         profileHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
@@ -89,7 +85,7 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Ajoute les arguments PHP à l'objet CallBdd
      */
-    public void argumentPHP(CallBdd profileHttp){
+    public void argumentPhpRecupererInfo(CallBdd profileHttp){
         profileHttp.ajoutArgumentPhpList("prenom", retrieveDataUser("prenom"));
         profileHttp.ajoutArgumentPhpList("nom", retrieveDataUser("nom"));
         profileHttp.ajoutArgumentPhpList("adresse_mail", retrieveDataUser("mail"));
@@ -146,7 +142,64 @@ public class ProfileActivity extends AppCompatActivity {
         toast.show();
     }
 
+    /**
+     * Fonction appelée lors du click sur l'edit/valider
+     */
     public void editDescription(View v){
-        textView_description.setText("test");
+        hideViewVisibleDescription();
+        showViewEditDescription();
+        editText_description.setText(textView_description.getText().toString());
+    }
+
+    public void validerEditDescription(View v){
+        hideViewEditDescription();
+        showViewVisibleDescription();
+        //callBddEditDescription();
+    }
+
+    //cache valider et l'edit text
+    public void hideViewEditDescription(){
+        textView_valider.setVisibility(View.GONE);
+        editText_description.setVisibility(View.GONE);
+    }
+
+    //afficher valider et l'edit text
+    public void showViewEditDescription(){
+        textView_valider.setVisibility(View.VISIBLE);
+        editText_description.setVisibility(View.VISIBLE);
+    }
+
+    //cache edit et description
+    public void hideViewVisibleDescription(){
+        textView_description.setVisibility(View.GONE);
+        textView_edit.setVisibility(View.GONE);
+    }
+
+    //affiche edit et description
+    public void showViewVisibleDescription(){
+        textView_description.setVisibility(View.VISIBLE);
+        textView_edit.setVisibility(View.VISIBLE);
+    }
+
+    public void callBddEditDescription(){
+        CallBdd httpEditDes = new CallBdd("http://sw");
+        argumentPhpEditDescription(httpEditDes);
+        httpEditDes.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd) {
+                //TODO completer
+            }
+
+            @Override
+            public void onFail(String retourBdd) {
+                //TODO completer
+            }
+        });
+    }
+
+    public void argumentPhpEditDescription(CallBdd httpEditDes){
+        httpEditDes.ajoutArgumentPhpList("nom", textView_nom.getText().toString());
+        httpEditDes.ajoutArgumentPhpList("prenom", textView_prenom.getText().toString());
+        httpEditDes.ajoutArgumentPhpList("description", editText_description.getText().toString());
     }
 }
