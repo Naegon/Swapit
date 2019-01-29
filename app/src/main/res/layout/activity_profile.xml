@@ -169,17 +169,8 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1.0"
                     android:gravity="end"
-                    android:onClick="editDescription"
-                    android:text="Edit" />
-                <TextView
-                    android:id="@+id/textView_profil_valider"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1.0"
-                    android:gravity="end"
-                    android:onClick="validerEditDescription"
-                    android:text="Valider"
-                    />
+                    android:onClick="onClickTextviewEdit"
+                    android:text="Modifier" />
 
             </LinearLayout>
 

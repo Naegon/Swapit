@@ -15,9 +15,10 @@ import org.json.JSONObject;
 // Page d'affichage du profile utilisateur
 public class ProfileActivity extends AppCompatActivity {
 
-    TextView textView_nom, textView_prenom, textView_swap, textView_mail, textView_tel, textView_description, textView_valider, textView_edit;
+    TextView textView_nom, textView_prenom, textView_swap, textView_mail, textView_tel, textView_description, textView_edit;
     EditText editText_description;
     String url, json_retour;
+    int switch_modification_description;
     private static String LOG_TAG = "ProfileActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
 
@@ -29,7 +30,6 @@ public class ProfileActivity extends AppCompatActivity {
         //TODO : ajouter un bouton recharger la page
 
         textView_description = findViewById(R.id.textView_profil_description_user);
-        textView_valider = findViewById(R.id.textView_profil_valider);
         textView_edit = findViewById(R.id.textView_profil_edit);
         textView_mail = findViewById(R.id.textView_profil_mail);
         textView_nom = findViewById(R.id.textView_profil_nom);
@@ -38,10 +38,9 @@ public class ProfileActivity extends AppCompatActivity {
         textView_tel = findViewById(R.id.textView_profil_telephone);
         editText_description = findViewById(R.id.editText_profil_description_user);
         json_retour = null;
-
+        switch_modification_description = 0;
 
         viderTextview();
-        hideViewEditDescription();
 
         final CallBdd profileHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_compte.php?");
         argumentPhpRecupererInfo(profileHttp);
@@ -145,54 +144,48 @@ public class ProfileActivity extends AppCompatActivity {
     /**
      * Fonction appelée lors du click sur l'edit/valider
      */
-    public void editDescription(View v){
-        hideViewVisibleDescription();
-        showViewEditDescription();
-        editText_description.setText(textView_description.getText().toString());
+    public void onClickTextviewEdit(View v){
+        if (switch_modification_description == 0){
+            switchModifierToValider();
+            editText_description.setText(textView_description.getText().toString());
+            switch_modification_description = 1;
+        }
+        else {
+            switchValiderToModifier();
+            callBddEditDescription();
+            switch_modification_description = 0;
+        }
     }
 
-    public void validerEditDescription(View v){
-        hideViewEditDescription();
-        showViewVisibleDescription();
-        //callBddEditDescription();
-    }
-
-    //cache valider et l'edit text
-    public void hideViewEditDescription(){
-        textView_valider.setVisibility(View.GONE);
-        editText_description.setVisibility(View.GONE);
-    }
-
-    //afficher valider et l'edit text
-    public void showViewEditDescription(){
-        textView_valider.setVisibility(View.VISIBLE);
+    public void switchModifierToValider(){
+        textView_edit.setText("Valider");
+        textView_description.setVisibility(View.GONE);
         editText_description.setVisibility(View.VISIBLE);
     }
 
-    //cache edit et description
-    public void hideViewVisibleDescription(){
-        textView_description.setVisibility(View.GONE);
-        textView_edit.setVisibility(View.GONE);
-    }
-
-    //affiche edit et description
-    public void showViewVisibleDescription(){
+    public void switchValiderToModifier(){
+        textView_edit.setText("Modifier");
         textView_description.setVisibility(View.VISIBLE);
-        textView_edit.setVisibility(View.VISIBLE);
+        editText_description.setVisibility(View.GONE);
     }
 
     public void callBddEditDescription(){
-        CallBdd httpEditDes = new CallBdd("http://sw");
+        CallBdd httpEditDes = new CallBdd("");
         argumentPhpEditDescription(httpEditDes);
         httpEditDes.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
             @Override
             public void onSuccess(String retourBdd) {
-                //TODO completer
+                Log.d(LOG_TAG, "Done : " + retourBdd);
+                textView_description.setText(editText_description.getText().toString());
+                switchModifierToValider();
             }
 
             @Override
             public void onFail(String retourBdd) {
-                //TODO completer
+                Log.d(LOG_TAG, "Fail : " + retourBdd);
+                afficherToast("Erreur dans la modification de la description");
+                switchValiderToModifier();
+
             }
         });
     }
