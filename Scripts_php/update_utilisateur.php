@@ -17,22 +17,45 @@ function update()
 
     if ($champ == "adresse_mail") {
         try {
-            $rep = $bdd->prepare('UPDATE compte_utilisateur SET adresse_mail = :adresse_mail WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            $rep = $bdd->prepare('SELECT * FROM compte_utilisateur WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
 
             $prenom = $_GET['prenom'];
             $nom = $_GET['nom'];
             $mdp = $_GET['mdp'];
             $adresse_mail = $_GET['texte'];
+            $mdp_test = NULL;
+            $nom_test = NULL;
+            $prenom_test = NULL;
 
             $rep->execute(array(
-                'mdp' => $mdp,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'adresse_mail' => $adresse_mail
+                'nom'=>$nom,
+                'prenom'=>$prenom,
+                'mdp'=>$mdp
             ));
 
-            echo 'true';
+            while ($donnees = $rep->fetch())
+            {
+                $mdp_test = $donnees['mdp'];
+                $prenom_test = $donnees['prenom'];
+                $nom_test = $donnees['nom'];
+            }
 
+            $rep->closeCursor();
+
+            $rep = $bdd->prepare('UPDATE compte_utilisateur SET adresse_mail = :adresse_mail WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            if ($mdp_test == $mdp AND $nom_test == $nom AND $prenom_test == $prenom) {
+                $rep->execute(array(
+                    'mdp' => $mdp,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'adresse_mail' => $adresse_mail
+                ));
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
             $rep->closeCursor();
 
         }
@@ -42,25 +65,47 @@ function update()
         }
     }
 
-    else if ($champ == "biographie" )
-    {
+    else if ($champ == "biographie" ) {
         try {
-            $rep = $bdd->prepare('UPDATE compte_utilisateur SET biographie = :biographie WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            $rep = $bdd->prepare('SELECT * FROM compte_utilisateur WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
 
             $prenom = $_GET['prenom'];
             $nom = $_GET['nom'];
             $mdp = $_GET['mdp'];
             $biographie = $_GET['texte'];
+            $mdp_test = NULL;
+            $nom_test = NULL;
+            $prenom_test = NULL;
 
             $rep->execute(array(
-                'mdp' => $mdp,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'biographie' => $biographie
+                'nom'=>$nom,
+                'prenom'=>$prenom,
+                'mdp'=>$mdp
             ));
 
-            echo 'true';
+            while ($donnees = $rep->fetch())
+            {
+                $mdp_test = $donnees['mdp'];
+                $prenom_test = $donnees['prenom'];
+                $nom_test = $donnees['nom'];
+            }
 
+            $rep->closeCursor();
+
+            $rep = $bdd->prepare('UPDATE compte_utilisateur SET biographie = :biographie WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            if ($mdp_test == $mdp AND $nom_test == $nom AND $prenom_test == $prenom) {
+                $rep->execute(array(
+                    'mdp' => $mdp,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'biographie' => $biographie
+                ));
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
             $rep->closeCursor();
 
         }
@@ -69,25 +114,49 @@ function update()
 
         }
     }
-    else if ($champ == "promo")
+
+    else if ($champ == "annee")
     {
         try {
-            $rep = $bdd->prepare('UPDATE compte_utilisateur SET annee = :annee WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            $rep = $bdd->prepare('SELECT * FROM compte_utilisateur WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
 
             $prenom = $_GET['prenom'];
             $nom = $_GET['nom'];
             $mdp = $_GET['mdp'];
             $annee = $_GET['texte'];
+            $mdp_test = NULL;
+            $nom_test = NULL;
+            $prenom_test = NULL;
 
             $rep->execute(array(
-                'mdp' => $mdp,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'annee' => $annee
+                'nom'=>$nom,
+                'prenom'=>$prenom,
+                'mdp'=>$mdp
             ));
 
-            echo 'true';
+            while ($donnees = $rep->fetch())
+            {
+                $mdp_test = $donnees['mdp'];
+                $prenom_test = $donnees['prenom'];
+                $nom_test = $donnees['nom'];
+            }
 
+            $rep->closeCursor();
+
+            $rep = $bdd->prepare('UPDATE compte_utilisateur SET annee = :annee WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            if ($mdp_test == $mdp AND $nom_test == $nom AND $prenom_test == $prenom) {
+                $rep->execute(array(
+                    'mdp' => $mdp,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'annee' => $annee
+                ));
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
             $rep->closeCursor();
 
         }
@@ -99,22 +168,45 @@ function update()
     else if ($champ == "numerotel")
     {
         try {
-            $rep = $bdd->prepare('UPDATE compte_utilisateur SET numerotel = :numerotel WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            $rep = $bdd->prepare('SELECT * FROM compte_utilisateur WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
 
             $prenom = $_GET['prenom'];
             $nom = $_GET['nom'];
             $mdp = $_GET['mdp'];
             $numerotel = $_GET['texte'];
+            $mdp_test = NULL;
+            $nom_test = NULL;
+            $prenom_test = NULL;
 
             $rep->execute(array(
-                'mdp' => $mdp,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'numerotel' => $numerotel
+                'nom'=>$nom,
+                'prenom'=>$prenom,
+                'mdp'=>$mdp
             ));
 
-            echo 'true';
+            while ($donnees = $rep->fetch())
+            {
+                $mdp_test = $donnees['mdp'];
+                $prenom_test = $donnees['prenom'];
+                $nom_test = $donnees['nom'];
+            }
 
+            $rep->closeCursor();
+
+            $rep = $bdd->prepare('UPDATE compte_utilisateur SET numerotel = :numerotel WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            if ($mdp_test == $mdp AND $nom_test == $nom AND $prenom_test == $prenom) {
+                $rep->execute(array(
+                    'mdp' => $mdp,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'numerotel' => $numerotel
+                ));
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
             $rep->closeCursor();
 
         }
@@ -126,22 +218,45 @@ function update()
     else if ($champ == "section")
     {
         try {
-            $rep = $bdd->prepare('UPDATE compte_utilisateur SET section = :section WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            $rep = $bdd->prepare('SELECT * FROM compte_utilisateur WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
 
             $prenom = $_GET['prenom'];
             $nom = $_GET['nom'];
             $mdp = $_GET['mdp'];
             $section = $_GET['texte'];
+            $mdp_test = NULL;
+            $nom_test = NULL;
+            $prenom_test = NULL;
 
             $rep->execute(array(
-                'mdp' => $mdp,
-                'nom' => $nom,
-                'prenom' => $prenom,
-                'section' => $section
+                'nom'=>$nom,
+                'prenom'=>$prenom,
+                'mdp'=>$mdp
             ));
 
-            echo 'true';
+            while ($donnees = $rep->fetch())
+            {
+                $mdp_test = $donnees['mdp'];
+                $prenom_test = $donnees['prenom'];
+                $nom_test = $donnees['nom'];
+            }
 
+            $rep->closeCursor();
+
+            $rep = $bdd->prepare('UPDATE compte_utilisateur SET section = :section WHERE nom = :nom AND prenom = :prenom AND mdp = :mdp');
+            if ($mdp_test == $mdp AND $nom_test == $nom AND $prenom_test == $prenom) {
+                $rep->execute(array(
+                    'mdp' => $mdp,
+                    'nom' => $nom,
+                    'prenom' => $prenom,
+                    'section' => $section
+                ));
+                echo 'true';
+            }
+            else
+            {
+                echo 'false';
+            }
             $rep->closeCursor();
 
         }
