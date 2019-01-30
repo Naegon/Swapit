@@ -1,9 +1,12 @@
 package com.swapit.swap_it;
 
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -41,6 +44,7 @@ public class ProfileActivity extends AppCompatActivity {
         switch_modification_description = 0;
 
         viderTextview();
+        editText_description.setVisibility(View.GONE);
 
         final CallBdd profileHttp = new CallBdd("http://91.121.116.121/swapit/renvoyer_info_compte.php?");
         argumentPhpRecupererInfo(profileHttp);
@@ -152,6 +156,7 @@ public class ProfileActivity extends AppCompatActivity {
         }
         else {
             switchValiderToModifier();
+            //showMdpDialog();
             callBddEditDescription();
             switch_modification_description = 0;
         }
@@ -170,22 +175,26 @@ public class ProfileActivity extends AppCompatActivity {
     }
 
     public void callBddEditDescription(){
-        CallBdd httpEditDes = new CallBdd("");
+        CallBdd httpEditDes = new CallBdd("http://91.121.116.121/swapit/update_utilisateur.php?");
         argumentPhpEditDescription(httpEditDes);
         httpEditDes.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
             @Override
-            public void onSuccess(String retourBdd) {
+            public void onSuccess(String retourBdd){
                 Log.d(LOG_TAG, "Done : " + retourBdd);
-                textView_description.setText(editText_description.getText().toString());
-                switchModifierToValider();
+                if (retourBdd.equals("false")){
+                    afficherToast("Une erreur s'est produite");
+                }
+                else{
+                    textView_description.setText(editText_description.getText().toString());
+                    switchValiderToModifier();
+                }
             }
 
             @Override
             public void onFail(String retourBdd) {
                 Log.d(LOG_TAG, "Fail : " + retourBdd);
-                afficherToast("Erreur dans la modification de la description");
+                afficherToast("Une erreur s'est produite");
                 switchValiderToModifier();
-
             }
         });
     }
@@ -193,6 +202,18 @@ public class ProfileActivity extends AppCompatActivity {
     public void argumentPhpEditDescription(CallBdd httpEditDes){
         httpEditDes.ajoutArgumentPhpList("nom", textView_nom.getText().toString());
         httpEditDes.ajoutArgumentPhpList("prenom", textView_prenom.getText().toString());
-        httpEditDes.ajoutArgumentPhpList("description", editText_description.getText().toString());
+        httpEditDes.ajoutArgumentPhpList("champ", "biographie");
+        //TODO changer le hardcode du mdp
+        httpEditDes.ajoutArgumentPhpList("mdp", "qsdfghjkl");
+        httpEditDes.ajoutArgumentPhpList("texte", editText_description.getText().toString());
     }
+
+    public Dialog showMdpDialog(){
+        AlertDialog.Builder myDialog = new AlertDialog.Builder(this);
+        LayoutInflater layoutInflater =  this.getLayoutInflater();
+
+        myDialog.setView(layoutInflater.inflate(R.layout.dialog_saisir_mdp, null));
+        return myDialog.create();
+    }
+
 }
