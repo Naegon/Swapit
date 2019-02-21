@@ -44,10 +44,6 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(this, NotificationActivity.class);
         startActivity(intent);
     }
-    public void EditProfile(View view) {
-        Intent intentEditProfile = new Intent(this, CreationCompteActivity.class);
-        startActivity(intentEditProfile);
-    }
     public void modificationPassword(View view){
         Intent intentPassword = new Intent(this, ModificationPasswordActivity.class);
         startActivity(intentPassword);
@@ -55,27 +51,46 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void supprimerCompte(View view){
         //TODO completer pour call php
-
         afficherDialog();
+    }
 
+    public void requeteHttp(){
+        CallBdd requetteHttpSuppression = new CallBdd("http://91.121.116.121/swapit/delete_utilisateur.php?");
 
     }
 
+    public String argumentPHP(){
+        String nom = retrieveDataUser("nom");
+        String prenom = retrieveDataUser("prenom");
+        String mail = retrieveDataUser("mail");
+/*
+        requetteHttpSuppression.ajoutArgumentPhpList("prenom" , prenom);
+        requetteHttpSuppression.ajoutArgumentPhpList("nom", nom);
+        requetteHttpSuppression.ajoutArgumentPhpList("adresse_mail", mail);
+*/
+        String param = "prenom=" + prenom + "&"
+                + "nom=" + nom + "&"
+                + "adresse_mail=" + mail;
+        return param;
+    }
     /**
      * Affiche pop up de suppression du compte
      */
     public void afficherDialog(){
         context = getApplicationContext();
+
         /*Dialog myDialog = new Dialog(context);
         myDialog.setContentView(R.layout.dialog_confirmer_suppression_compte);
         myDialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         myDialog.show();*/
+
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setMessage(R.string.suppression_compte_texte);
         builder.setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
                 String url = urlPHP();
+
                 new MakeNetworkCall().execute(url, "GET");
                 Log.i(LOG_TAG,"ok");
             }
@@ -83,6 +98,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                //Enleve la boite de dialogue automatiquement
             }
         });
 
@@ -90,16 +106,7 @@ public class SettingsActivity extends AppCompatActivity {
         dialog.show();
     }
 
-    public String argumentPHP(){
-        String nom = retrieveDataUser("nom");
-        String prenom = retrieveDataUser("prenom");
-        String mail = retrieveDataUser("mail");
 
-        String param = "prenom=" + prenom + "&"
-                + "nom=" + nom + "&"
-                + "adresse_mail=" + mail;
-        return param;
-    }
 
     public String retrieveDataUser(String id){
         SharedPreferences prefs_id = getSharedPreferences(IDENTITE_USER, MODE_PRIVATE);

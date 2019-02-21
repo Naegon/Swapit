@@ -68,6 +68,12 @@ public class CallBdd {
         Log.d(LOG_TAG, "Liste param " + parametrePhp.toString());
     }
 
+    /**
+     * Construction de la chaine de caractere à ajouter à l'url
+     * Les clé et valeurs sont séparé par un "="
+     * Les valeurs et clé sont séparé par un "&" sauf le dernier couple
+     * Ex : nom="mon_nom"&prenom="mon_prenom"
+     */
     private void ajoutArgumentPhpUrl(ArrayList<String> param){
         for (int i = 0 ; i < param.size() ; i++){
             if ((i % 2) == 0){
@@ -80,6 +86,18 @@ public class CallBdd {
                 }
             }
             Log.d(LOG_TAG, "URL PHP " + urlPhp);
+        }
+    }
+
+    /**
+     * Suppression d'un couple clé/valeur dans la liste d'argument
+     */
+    public void suppressionArgumentPhpList(String cle){
+        for (int i = 0 ; i < parametrePhp.size() ; i++){
+            if ((parametrePhp.get(i).equals(cle)) && (i % 2 == 0)){ //on test sur la clé donc sur les éléments d'index pair
+                parametrePhp.remove(i); //suppression de la clé
+                parametrePhp.remove(i+1); //suppression de la valeur liée à la clé
+            }
         }
     }
 
