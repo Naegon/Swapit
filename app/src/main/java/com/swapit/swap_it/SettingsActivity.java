@@ -56,23 +56,41 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void requeteHttp(){
         CallBdd requetteHttpSuppression = new CallBdd("http://91.121.116.121/swapit/delete_utilisateur.php?");
+        argumentPHP2(requetteHttpSuppression);
 
+        requetteHttpSuppression.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+            @Override
+            public void onSuccess(String retourBdd) {
+                //TODO à completer
+            }
+            @Override
+            public void onFail(String retourBdd) {
+                //TODO à completer
+            }
+        });
+    }
+
+    public void argumentPHP2(CallBdd requetteHttpSuppression){
+        String nom = retrieveDataUser("nom");
+        String prenom = retrieveDataUser("prenom");
+        String mail = retrieveDataUser("mail");
+
+        requetteHttpSuppression.ajoutArgumentPhpList("prenom" , prenom);
+        requetteHttpSuppression.ajoutArgumentPhpList("nom", nom);
+        requetteHttpSuppression.ajoutArgumentPhpList("adresse_mail", mail);
     }
 
     public String argumentPHP(){
         String nom = retrieveDataUser("nom");
         String prenom = retrieveDataUser("prenom");
         String mail = retrieveDataUser("mail");
-/*
-        requetteHttpSuppression.ajoutArgumentPhpList("prenom" , prenom);
-        requetteHttpSuppression.ajoutArgumentPhpList("nom", nom);
-        requetteHttpSuppression.ajoutArgumentPhpList("adresse_mail", mail);
-*/
+
         String param = "prenom=" + prenom + "&"
                 + "nom=" + nom + "&"
                 + "adresse_mail=" + mail;
         return param;
     }
+
     /**
      * Affiche pop up de suppression du compte
      */
