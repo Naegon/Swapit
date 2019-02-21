@@ -252,7 +252,6 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
             annonce_valide = false;
         }
         if (!spinnerValide()) {
-            //TODO ignserer une snackbar "tous les spinner doivent être rempli
             annonce_valide = false;
         }
         if (!timeValide()){

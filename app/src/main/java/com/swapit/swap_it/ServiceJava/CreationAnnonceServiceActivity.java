@@ -63,12 +63,8 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if (validiteSaisie()){
-                    /*
-                    String u = urlPHP();
-                    new MakeNetworkCall().execute(u , "GET");
-                    //TODO securiser le lancement
-                    */
 
+                    //TODO securiser le lancement
                     final CallBdd creationAnnonceServiceHttp = new CallBdd("http://91.121.116.121/swapit/creer_annonce_service.php?");
                     argumentPHP(creationAnnonceServiceHttp);
                     creationAnnonceServiceHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
@@ -264,7 +260,6 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         AnnonceServiceClass annonce = new AnnonceServiceClass();
         String swap = nb_swap.getText().toString();
 
-        //TODO changer nom et prenom
         annonce.setPrenom(retrieveDataUser("prenom"));
         annonce.setNom(retrieveDataUser("nom"));
         annonce.setNb_swap(swap);

@@ -15,11 +15,14 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import com.swapit.swap_it.CallBdd;
+
+import static android.widget.Toast.LENGTH_LONG;
 
 // Page pour se connecter à son compte
 public class LoginActivity extends AppCompatActivity {
@@ -28,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText editText_email, editText_mdp;
     CheckBox checkBox_rester_co;
     private static String LOG_TAG = "LoginActivity";
+
     public static final String IDENTITE_USER = "IdentiteUser";
 
     @Override
@@ -58,6 +62,7 @@ public class LoginActivity extends AppCompatActivity {
             });
         }
 
+
         //Gestion bouton création du compte
         button_creer_compte.setOnClickListener(new OnClickListener() {
             @Override
@@ -65,6 +70,7 @@ public class LoginActivity extends AppCompatActivity {
                 lancerPage(1);
             }
         });
+
 
         //Gestion bouton login
         button_connexion.setOnClickListener(new OnClickListener() {
@@ -84,6 +90,7 @@ public class LoginActivity extends AppCompatActivity {
     public void requeteHttp(){
         //creation de l'objet de type CallBdd pour la connexion
         final CallBdd loginHttp = new CallBdd("http://91.121.116.121/swapit/login.php?");
+
         argumentPHP(loginHttp);
 
         //listener sur la requete

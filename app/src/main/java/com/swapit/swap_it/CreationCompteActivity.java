@@ -123,7 +123,6 @@ public class CreationCompteActivity extends AppCompatActivity {
      */
 
 
-    //TODO : a completer en fonction de ce qu'on veut
     public boolean validiteEmail(){
         String string_email = email.getText().toString();
         if (string_email.contains("@efrei.net") || string_email.contains("@efreitech.net") || string_email.contains("@esigetel.net")){
