@@ -297,6 +297,9 @@ public class CreationCompteActivity extends AppCompatActivity {
         bio.setText(null);
     }
 
+    /**
+     * Fonction pour remplir le callBDD pour le compte fake
+     */
     public void compteFake(CallBdd profileHttp){
         profileHttp.ajoutArgumentPhpList("nom", "fake_prenom");
         profileHttp.ajoutArgumentPhpList("mdp", "fake_mdp");
