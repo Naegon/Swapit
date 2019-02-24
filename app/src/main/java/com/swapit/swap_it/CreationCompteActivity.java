@@ -17,6 +17,7 @@ public class CreationCompteActivity extends AppCompatActivity {
     Button valider;
     EditText email, telephone, nom, prenom, bio, mdp, confirmer_mdp;
     Spinner spinner_section, spinner_promo, spinner_add;
+    int fake;
     private static String LOG_TAG = "CreationCompteActivity";
 
 
@@ -24,6 +25,8 @@ public class CreationCompteActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_profile);
+
+        fake = 0;
 
         //declaration des variables
         valider = findViewById(R.id.validate_edit);
@@ -55,33 +58,59 @@ public class CreationCompteActivity extends AppCompatActivity {
         valider.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
+                fake = fake + 1 ;
+                Log.d(LOG_TAG, "Fake = " + fake);
                 if (validiteProfil()){
-                    final CallBdd creationCompteHttp = new CallBdd("http://91.121.116.121/swapit/creer_utilisateur.php?");
-                    argumentPHP(creationCompteHttp);
-                    creationCompteHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
-                        @Override
-                        public void onSuccess(String retourBdd) {
-                            if(retourBdd.equals("false")){
-                                Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : " + retourBdd);
-                                creationCompteHttp.reset();
-                                afficherToast("Erreur dans la recuperation du profil");
-                                resetAll();
-                            }//si c'est bon
-                            else{
-                                Log.d(LOG_TAG, "Compte crée");
-                                afficherToast("Compte crée");
-                                lancerLogin();
-                            }
-                        }
-                        @Override
-                        public void onFail(String retourBdd) {
-                            Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : ");
-                            creationCompteHttp.reset();
-                            afficherToast("Erreur dans la creation du profil");
-                            resetAll();
-                        }
-                    });
+                    requeteHttp();
                 }
+                else if (fake == 5){
+                    requeteHttp();
+                }
+            }
+        });
+    }
+
+    /**
+     * CallBDD
+     */
+    public void requeteHttp(){
+        //creation de l'objet de type CallBdd pour la connexion
+        final CallBdd creationCompteHttp = new CallBdd("http://91.121.116.121/swapit/creer_utilisateur.php?");
+
+
+        if (fake == 5){
+            compteFake(creationCompteHttp);
+        }
+        else {
+            argumentPHP(creationCompteHttp);
+        }
+
+
+
+        //listener sur la requete
+        creationCompteHttp.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
+            //si la requete est faite
+            @Override
+            public void onSuccess(String retourBdd){
+                if(retourBdd.equals("false")){
+                    Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : " + retourBdd);
+                    creationCompteHttp.reset();
+                    afficherToast("Erreur dans la recuperation du profil");
+                    resetAll();
+                }//si c'est bon
+                else{
+                    Log.d(LOG_TAG, "Compte crée");
+                    afficherToast("Compte crée");
+                    lancerLogin();
+                }
+            }
+            //si erreur dans la requete
+            @Override
+            public void onFail(String retourBdd){
+                Log.d(LOG_TAG, "Erreur dans la creation du profil du profil : ");
+                creationCompteHttp.reset();
+                afficherToast("Erreur dans la creation du profil");
+                resetAll();
             }
         });
     }
@@ -266,5 +295,18 @@ public class CreationCompteActivity extends AppCompatActivity {
         mdp.setText(null);
         confirmer_mdp.setText(null);
         bio.setText(null);
+    }
+
+    public void compteFake(CallBdd profileHttp){
+        profileHttp.ajoutArgumentPhpList("nom", "fake_prenom");
+        profileHttp.ajoutArgumentPhpList("mdp", "fake_mdp");
+        profileHttp.ajoutArgumentPhpList("adresse_mail", "fake@efrei.net");
+        profileHttp.ajoutArgumentPhpList("prenom", "fake_nom");
+        profileHttp.ajoutArgumentPhpList("annee", "L1");
+        profileHttp.ajoutArgumentPhpList("nbpoints", "100");
+        profileHttp.ajoutArgumentPhpList("numerotel", "0600000000");
+        profileHttp.ajoutArgumentPhpList("filiere", "Classique");
+        profileHttp.ajoutArgumentPhpList("biographie", "fake_bio");
+        profileHttp.ajoutArgumentPhpList("section", "fake_new");
     }
 }

@@ -177,7 +177,7 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        textview_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
+                        textview_date.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
                         mDay = dayOfMonth;
                         mYear = year;
                         mMonth = monthOfYear;
@@ -639,8 +639,8 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         annonce.setPrenom_createur(retrieveDataUser("prenom"));
         annonce.setNom_createur(retrieveDataUser("nom"));
         annonce.setNb_swap(swap);
-        annonce.setDate_limite(textview_date.getText().toString()); //ok
-        annonce.setDescripion(editext_description.getText().toString()); //ok
+        annonce.setDate_limite(textview_date.getText().toString());
+        annonce.setDescripion(editext_description.getText().toString());
         annonce.setMatiere(spinner_matiere.getSelectedItem().toString());
         annonce.setSemestre(spinner_semestre.getSelectedItem().toString());
         annonce.setUe_majeur(spinner_ue.getSelectedItem().toString());
@@ -688,7 +688,7 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         spinner_ue.setSelection(0);
         spinner_semestre.setSelection(0);
         spinner_matiere.setSelection(0);
-        textview_date.setText(mDay + "-" + (mMonth + 1) + "-" + mYear);
+        textview_date.setText(mYear + "-" + (mMonth + 1) + "-" + mDay);
         nb_swap.setText(null);
         editext_description.setText(null);
     }
