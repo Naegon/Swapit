@@ -61,11 +61,16 @@ public class SettingsActivity extends AppCompatActivity {
         requetteHttpSuppression.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
             @Override
             public void onSuccess(String retourBdd) {
-                //TODO à completer
+                Log.d(LOG_TAG, "OnSuccess : " + retourBdd);
+                if (retourBdd.equals("true")){
+                    clearSharedPreference();
+                    lancerLogin();
+                }
             }
             @Override
             public void onFail(String retourBdd) {
-                //TODO à completer
+                Log.d(LOG_TAG, "OnFail : " + retourBdd);
+                toast("Erreur");
             }
         });
     }
@@ -78,17 +83,6 @@ public class SettingsActivity extends AppCompatActivity {
         requetteHttpSuppression.ajoutArgumentPhpList("prenom" , prenom);
         requetteHttpSuppression.ajoutArgumentPhpList("nom", nom);
         requetteHttpSuppression.ajoutArgumentPhpList("adresse_mail", mail);
-    }
-
-    public String argumentPHP(){
-        String nom = retrieveDataUser("nom");
-        String prenom = retrieveDataUser("prenom");
-        String mail = retrieveDataUser("mail");
-
-        String param = "prenom=" + prenom + "&"
-                + "nom=" + nom + "&"
-                + "adresse_mail=" + mail;
-        return param;
     }
 
     /**
@@ -107,10 +101,7 @@ public class SettingsActivity extends AppCompatActivity {
         builder.setPositiveButton("Confirmer", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
-                String url = urlPHP();
-
-                new MakeNetworkCall().execute(url, "GET");
-                Log.i(LOG_TAG,"ok");
+                requeteHttp();
             }
         });
         builder.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
@@ -123,8 +114,6 @@ public class SettingsActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
-
-
 
     public String retrieveDataUser(String id){
         SharedPreferences prefs_id = getSharedPreferences(IDENTITE_USER, MODE_PRIVATE);
@@ -139,177 +128,6 @@ public class SettingsActivity extends AppCompatActivity {
             data = prefs_id.getString("mail", "null");
         }
         return data;
-    }
-
-    public String urlPHP(){
-        String url;
-        String param = argumentPHP();
-        //envoie bdd
-        url = "http://91.121.116.121/swapit/delete_utilisateur.php?" + param;
-        Log.d(LOG_TAG, "Error : " + url);
-        return url;
-    }
-
-    InputStream ByGetMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            URL url = new URL(ServerURL);
-            HttpURLConnection cc = (HttpURLConnection) url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to GET
-            cc.setRequestMethod("GET");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-
-            //reading HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            if (response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData" + e.getMessage());
-
-        }
-        return DataInputStream;
-
-    }
-
-    InputStream ByPostMethod(String ServerURL) {
-
-        InputStream DataInputStream = null;
-        try {
-
-            //Post parameters
-            String PostParam = "first_name=android&amp;last_name=pala";
-
-            //Preparing
-            URL url = new URL(ServerURL);
-
-            HttpURLConnection cc = (HttpURLConnection)
-                    url.openConnection();
-            //set timeout for reading InputStream
-            cc.setReadTimeout(5000);
-            // set timeout for connection
-            cc.setConnectTimeout(5000);
-            //set HTTP method to POST
-            cc.setRequestMethod("POST");
-            //set it to true as we are connecting for input
-            cc.setDoInput(true);
-            //opens the communication link
-            cc.connect();
-
-            //Writing data (bytes) to the data output stream
-            DataOutputStream dos = new DataOutputStream(cc.getOutputStream());
-            dos.writeBytes(PostParam);
-            //flushes data output stream.
-            dos.flush();
-            dos.close();
-
-            //Getting HTTP response code
-            int response = cc.getResponseCode();
-
-            //if response code is 200 / OK then read Inputstream
-            //HttpURLConnection.HTTP_OK is equal to 200
-            if(response == HttpURLConnection.HTTP_OK) {
-                DataInputStream = cc.getInputStream();
-            }
-
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in GetData", e);
-        }
-        return DataInputStream;
-
-    }
-
-    String ConvertStreamToString(InputStream stream) {
-
-        InputStreamReader isr = new InputStreamReader(stream);
-        BufferedReader reader = new BufferedReader(isr);
-        StringBuilder response = new StringBuilder();
-
-        String line = null;
-        try {
-
-            while ((line = reader.readLine()) != null) {
-                response.append(line);
-            }
-
-        } catch (IOException e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } catch (Exception e) {
-            Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-        } finally {
-
-            try {
-                stream.close();
-
-            } catch (IOException e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-
-            } catch (Exception e) {
-                Log.e(LOG_TAG, "Error in ConvertStreamToString", e);
-            }
-        }
-        return response.toString();
-    }
-
-    private class MakeNetworkCall extends AsyncTask<String, Void, String> {
-
-        @Override
-        protected void onPreExecute() {
-            super.onPreExecute();
-            toast("Chargement");
-        }
-
-        @Override
-        protected String doInBackground(String... arg) {
-
-            InputStream is = null;
-            String URL = arg[0];
-            Log.d(LOG_TAG, "URL: " + URL);
-            String res = "";
-
-
-            if (arg[1].equals("Post")) {
-
-                is = ByPostMethod(URL);
-
-            } else {
-
-                is = ByGetMethod(URL);
-            }
-            if (is != null) {
-                res = ConvertStreamToString(is);
-            } else {
-                res = "Something went wrong";
-            }
-            //res = json(res);
-            return res;
-        }
-
-        protected void onPostExecute(String result) {
-            super.onPostExecute(result);
-            Log.d(LOG_TAG, result);
-            Log.d(LOG_TAG, "retour " + result);
-            //TODO changer le scipt pour renvoyer vrai si les annonces et le compte sont supprimé et faux dans les autres cas
-            if (result.equals("true")){
-                toast("Suppression réussie");
-                clearSharedPreference();
-                lancerLogin();
-            }
-            else{
-                toast("Echec de la suppression du compte");
-            }
-
-        }
     }
 
     public void toast(String message){
