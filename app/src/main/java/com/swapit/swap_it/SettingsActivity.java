@@ -56,7 +56,7 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void requeteHttp(){
         CallBdd requetteHttpSuppression = new CallBdd("http://91.121.116.121/swapit/delete_utilisateur.php?");
-        argumentPHP2(requetteHttpSuppression);
+        argumentPHP(requetteHttpSuppression);
 
         requetteHttpSuppression.volleyRequeteHttpCallBack(getApplicationContext(), new CallBdd.CallBackBdd() {
             @Override
@@ -75,7 +75,7 @@ public class SettingsActivity extends AppCompatActivity {
         });
     }
 
-    public void argumentPHP2(CallBdd requetteHttpSuppression){
+    public void argumentPHP(CallBdd requetteHttpSuppression){
         String nom = retrieveDataUser("nom");
         String prenom = retrieveDataUser("prenom");
         String mail = retrieveDataUser("mail");
