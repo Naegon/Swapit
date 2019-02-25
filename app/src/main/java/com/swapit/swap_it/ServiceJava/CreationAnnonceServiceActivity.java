@@ -29,6 +29,7 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
     TextView textview_date;
     int mYear, mMonth, mDay;
     Spinner spinner_categorie, spinner_sous_categorie;
+    String date;
     public static final String IDENTITE_USER = "IdentiteUser";
     private static String LOG_TAG = "CreationAnnonceServiceActivity";
 
@@ -197,6 +198,7 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                        date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth;
                         textview_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + "-" + year);
                         mDay = dayOfMonth;
                         mYear = year;
@@ -263,7 +265,7 @@ public class CreationAnnonceServiceActivity extends AppCompatActivity {
         annonce.setPrenom(retrieveDataUser("prenom"));
         annonce.setNom(retrieveDataUser("nom"));
         annonce.setNb_swap(swap);
-        annonce.setDate(textview_date.getText().toString());
+        annonce.setDate(date);
         annonce.setDescription(description.getText().toString());
         annonce.setCategorie(spinner_categorie.getSelectedItem().toString());
         annonce.setSous_categorie(spinner_sous_categorie.getSelectedItem().toString());

@@ -35,6 +35,8 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
     Spinner spinner_semestre, spinner_matiere, spinner_ue;
     RadioButton radiobutton_license, radiobutton_master;
     RadioGroup radiogroup_cycle;
+    String date;
+
     private static String LOG_TAG = "CreationAnnonceSoutienActivity";
     public static final String IDENTITE_USER = "IdentiteUser";
 
@@ -177,7 +179,8 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
                 new DatePickerDialog.OnDateSetListener() {
                     @Override
                     public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                        textview_date.setText(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                        date = year + "-" + (monthOfYear + 1) + "-" + dayOfMonth; // stockage de la date à envoyé (format américain)
+                        textview_date.setText(dayOfMonth + "-" + (monthOfYear + 1) + year); // affichage dans de la date dans le texte view (format francais)
                         mDay = dayOfMonth;
                         mYear = year;
                         mMonth = monthOfYear;
@@ -639,7 +642,7 @@ public class CreationAnnonceSoutienActivity extends AppCompatActivity {
         annonce.setPrenom_createur(retrieveDataUser("prenom"));
         annonce.setNom_createur(retrieveDataUser("nom"));
         annonce.setNb_swap(swap);
-        annonce.setDate_limite(textview_date.getText().toString());
+        annonce.setDate_limite(date);
         annonce.setDescripion(editext_description.getText().toString());
         annonce.setMatiere(spinner_matiere.getSelectedItem().toString());
         annonce.setSemestre(spinner_semestre.getSelectedItem().toString());
